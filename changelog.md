@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2025-11-07
 
-### Changed
+### Added
 - added support for Wrath of the Lich King expansion (WotLK) content
 - added a larger range of default Blacklist terms
 
