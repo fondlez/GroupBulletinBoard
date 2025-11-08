@@ -4,6 +4,8 @@ local tconcat = table.concat
 local wipe = GBB.api.wipe
 local RAID_CLASS_COLORS_HEX = GBB.api.RAID_CLASS_COLORS_HEX
 
+local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
+
 --ScrollList / Request
 -------------------------------------------------------------------------------------
 local LastDungeon
@@ -442,7 +444,7 @@ function GBB.UpdateList()
 
   if GBB.DB.EnableShowOnly then
     local hi = GBB.dungeonSort[ LastDungeon ] or 0
-    while hi < GBB.TBCMAXDUNGEON do
+    while hi < GBB.NUM_DUNGEONS do
       if LastDungeon ~= "" and GBB.FoldedDungeons[ LastDungeon ] ~= true and GBB.DB.EnableShowOnly then
         yy = yy + itemHight * (GBB.DB.ShowOnlyNb - cEntrys)
       end
@@ -797,7 +799,7 @@ function GBB.UnfoldAllDungeon()
 end
 
 function GBB.FoldAllDungeon()
-  for i = 1, GBB.TBCMAXDUNGEON do
+  for i = 1, GBB.NUM_DUNGEONS do
     GBB.FoldedDungeons[ GBB.dungeonSort[ i ] ] = true
   end
   GBB.UpdateList()
@@ -832,7 +834,11 @@ local function createMenu( DungeonID, req )
   GBB.PopupDynamic:AddItem( "", true )
   GBB.PopupDynamic:AddItem( GBB.L[ "HeaderSettings" ], false, GBB.Options.Open, 1 )
 
-  GBB.PopupDynamic:AddItem( GBB.L[ "TBCPanelFilter" ], false, GBB.Options.Open, 2 )
+  if has_wotlk then
+    GBB.PopupDynamic:AddItem( GBB.L[ "WotlkPanelFilter" ], false, GBB.Options.Open, 2 )
+  else
+    GBB.PopupDynamic:AddItem( GBB.L[ "TBCPanelFilter" ], false, GBB.Options.Open, 2 )
+  end
 
   GBB.PopupDynamic:AddItem( GBB.L[ "PanelAbout" ], false, GBB.Options.Open, 6 )
   GBB.PopupDynamic:AddItem( GBB.L[ "BtnCancel" ], false )

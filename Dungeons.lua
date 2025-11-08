@@ -1,5 +1,7 @@
 local _, GBB = GroupBulletinBoard_Loader.Main()
 
+local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
+
 local function getSeasonalDungeons()
   local events = {}
 
@@ -72,7 +74,7 @@ function GBB.GetDungeonNames()
     [ "AQ20" ] = "Ruins of Ahn'Qiraj (20)",
     [ "BWL" ] = "Blackwing Lair (40)",
     [ "AQ40" ] = "Temple of Ahn'Qiraj (40)",
-    [ "NAXX" ] = "Naxxramas (40)",
+    [ "NAX" ] = "Naxxramas (40)",
     [ "WSG" ] = "Warsong Gulch (PvP)",
     [ "AB" ] = "Arathi Basin (PvP)",
     [ "AV" ] = "Alterac Valley (PvP)",
@@ -85,6 +87,38 @@ function GBB.GetDungeonNames()
     [ "BREW" ] = "Brewfest - Coren Direbrew",
     [ "HOLLOW" ] = "Hallow's End - Headless Horseman",
   }
+  
+  if has_wotlk then
+    DefaultEnGB["AK"] =	"Ahn'kahet: The Old Kingdom"
+    DefaultEnGB["AN"] =	"Azjol-Nerub"
+    DefaultEnGB["DTK"] =	"Drak'Tharon Keep"
+    DefaultEnGB["GUN"] =	"Gundrak"
+    DefaultEnGB["HOL"] =	"Halls of Lightning"
+    DefaultEnGB["HOS"] =	"Halls of Stone"
+    DefaultEnGB["COS"] =	"The Culling of Stratholme"
+    DefaultEnGB["NEX"] =	"The Nexus"
+    DefaultEnGB["OCU"] =	"The Oculus"
+    DefaultEnGB["VH"] =	"The Violet Hold"
+    DefaultEnGB["UK"] =	"Utgarde Keep"
+    DefaultEnGB["UP"] =	"Utgarde Pinnacle"
+    DefaultEnGB["TOC"] =	"Trial of the Champion"
+    DefaultEnGB["FOS"] =	"The Forge of Souls"
+    DefaultEnGB["POS"] =	"Pit of Saron"
+    DefaultEnGB["HOR"] =	"Halls of Reflection"
+    DefaultEnGB["VOA"] =	"Vault of Archavon"
+    DefaultEnGB["NAXX"] =	"Naxxramas"
+    DefaultEnGB["EOE"] =	"The Eye of Eternity"
+    DefaultEnGB["OS"] =	"The Obsidian Sanctum"
+    DefaultEnGB["ULDR"] =	"Ulduar"
+    DefaultEnGB["TOGC"] =	"Trial of the Crusader"
+    DefaultEnGB["ONY"] =	"Onyxia's Lair"
+    DefaultEnGB["ICC"] =	"Icecrown Citadel"
+    DefaultEnGB["RS"] =	"The Ruby Sanctum"
+    
+		DefaultEnGB["WG"]  = "Wintergrasp (PvP)"
+		DefaultEnGB["SOTA"] = "Stand of the Ancients (PvP)"
+    DefaultEnGB["IOC"] = "Isle of Conquest (PvP)"
+  end
 
   local dungeonNamesLocales = {
     deDE = {
@@ -484,10 +518,7 @@ GBB.VanillaDungeonLevels = {
   [ "AQ20" ] = { 60, 60 },
   [ "BWL" ] = { 60, 60 },
   [ "AQ40" ] = { 60, 60 },
-  [ "NAXX" ] = { 60, 60 },
-  [ "WSG" ] = { 10, 70 },
-  [ "AB" ] = { 20, 70 },
-  [ "AV" ] = { 51, 70 },
+  [ "NAX" ] = { 60, 60 },
   [ "MISC" ] = { 0, 100 },
   [ "DEBUG" ] = { 0, 100 },
   [ "BAD" ] = { 0, 100 },
@@ -529,10 +560,7 @@ GBB.PostTbcDungeonLevels = {
   [ "AQ20" ] = { 60, 60 },
   [ "BWL" ] = { 60, 60 },
   [ "AQ40" ] = { 60, 60 },
-  [ "NAXX" ] = { 60, 60 },
-  [ "WSG" ] = { 10, 70 },
-  [ "AB" ] = { 20, 70 },
-  [ "AV" ] = { 51, 70 },
+  [ "NAX" ] = { 60, 60 },
   [ "MISC" ] = { 0, 100 },
   [ "DEBUG" ] = { 0, 100 },
   [ "BAD" ] = { 0, 100 },
@@ -568,29 +596,95 @@ GBB.TbcDungeonLevels     = {
   [ "HYJAL" ] = { 70, 70 },
   [ "BT" ] = { 70, 70 },
   [ "SWP" ] = { 70, 70 },
-  [ "EOTS" ] = { 15, 70 },
-  [ "ARENA" ] = { 70, 70 },
   [ "BREW" ] = { 65, 70 },
   [ "HOLLOW" ] = { 65, 70 },
 }
+
+GBB.PvpLevels = {
+	["WSG"] = 	{10,70},
+  ["AB"] = 	{20,70},
+  ["AV"] = 	{51,70},
+  ["EOTS"] =   {15,70},
+  ["ARENA"] = {70,80},
+}
+
+if has_wotlk then  
+  GBB.WotlkDungeonLevels = {
+    ["UK"] =	{69,72},
+    ["NEX"] =	{71,73},
+    ["AN"] =	{72,74},
+    ["AK"] =	{73,75},
+    ["DTK"] =	{74,76},
+    ["VH"] =	{75,77},
+    ["HOS"] =	{77,79},
+    ["GUN"] =	{79,80},
+    ["HOL"] =	{79,80},
+    ["COS"] =	{79,80},
+    ["OCU"] =	{79,80},
+    ["UP"] =	{79,80},
+    ["TOC"] =	{79,80},
+    ["FOS"] =	{79,80},
+    ["POS"] =	{79,80},
+    ["HOR"] =	{79,80},
+    ["VOA"] =	{80,80},
+    ["NAXX"] =	{80,80},
+    ["EOE"] =	{80,80},
+    ["OS"] =	{80,80},
+    ["ULDR"] =	{80,80},
+    ["TOGC"] =	{80,80},
+    ["ONY"] =	{80,80},
+    ["ICC"] =	{80,80},
+    ["RS"] =	{80,80},
+    ["BREW"] = {75,80},
+    ["HOLLOW"] = {75,80},
+  }
+
+  GBB.WotlkDungeonNames = {
+    "UK", "NEX", "AN", "AK", "DTK", "VH", "HOS", "GUN", "HOL", "COS", "OCU",
+    "UP", "TOC", "FOS", "POS", "HOR", "VOA", "NAXX", "EOE", "OS", 
+    "ULDR", "TOGC", "ONY", "ICC", "RS",
+  }
+  
+  -- New bgs: Wintergrasp + Strand of the Ancients
+  GBB.PvpLevels["WG"] = {80,80}
+  GBB.PvpLevels["SOTA"] = {71,80}
+  GBB.PvpLevels["IOC"] = {71,80}
+  
+  GBB.PvpNames = {
+    "WSG", "AB", "AV", "EOTS", "WG", "SOTA", "IOC", "ARENA",
+  }
+  
+  -- No more "ONY"
+  GBB.VanillaDungeonLevels["ONY"] = nil
+  GBB.PostTbcDungeonLevels["ONY"] = nil
+  GBB.TbcDungeonLevels["BREW"] = nil
+  GBB.TbcDungeonLevels["HOLLOW"] = nil
+  
+  GBB.VanillaDungeonNames   = {
+    "RFC", "WC", "DM", "SFK", "STOCKS", "BFD", "GNOMER",
+    "RFK", "GY", "LIB", "ARMS", "CATH", "RFD", "ULDA", 
+    "ZF", "MARA", "ST", "BRD", "LBRS", "DME", "DMN", 
+    "DMW", "STRAT", "SCHOLO", "UBRS", "MC", "ZG", 
+    "AQ20", "BWL", "AQ40", "NAX",
+  }
+else
+  GBB.PvpNames = {
+    "WSG", "AB", "AV", "EOTS", "ARENA",
+  }
+  
+  GBB.VanillaDungeonNames   = {
+    "RFC", "WC", "DM", "SFK", "STOCKS", "BFD", "GNOMER",
+    "RFK", "GY", "LIB", "ARMS", "CATH", "RFD", "ULDA", 
+    "ZF", "MARA", "ST", "BRD", "LBRS", "DME", "DMN", 
+    "DMW", "STRAT", "SCHOLO", "UBRS", "ONY", "MC", "ZG", 
+    "AQ20", "BWL", "AQ40", "NAX",
+  }
+end
 
 GBB.TbcDungeonNames      = {
   "RAMPS", "BF", "SHH", "MAGS", "SP", "UB", "SV", "SSC", "MT", "AC",
   "SH", "SL", "OHF", "BM", "MECHA", "BOTA", "ARCA", "EYE", "MGT", "KARA",
   "GRUULS", "ZA", "HYJAL", "BT", "SWP",
-}
-
-GBB.VanillDungeonNames   = {
-  "RFC", "WC", "DM", "SFK", "STOCKS", "BFD", "GNOMER",
-  "RFK", "GY", "LIB", "ARMS", "CATH", "RFD", "ULDA",
-  "ZF", "MARA", "ST", "BRD", "LBRS", "DME", "DMN",
-  "DMW", "STRAT", "SCHOLO", "UBRS", "ONY", "MC", "ZG",
-  "AQ20", "BWL", "AQ40", "NAXX",
-}
-
-
-GBB.PvpNames = {
-  "WSG", "AB", "AV", "EOTS", "ARENA",
 }
 
 GBB.Misc = { "MISC", "TRADE", }
@@ -600,15 +694,16 @@ GBB.DebugNames = {
 }
 
 GBB.Raids = {
-  "ONY", "MC", "ZG", "AQ20", "BWL", "AQ40", "NAXX",
-  "KARA", "GRUULS", "MAGS", "SSC", "EYE", "ZA", "HYJAL",
-  "BT", "SWP", "ARENA", "WSG", "AV", "AB", "EOTS",
+  "ONY", "MC", "BWL", "ZG", "AQ20", "AQ40", "NAX",
+  "KARA", "GRUULS", "MAGS", "SSC", "EYE", "ZA", "HYJAL", "BT", "SWP", 
+  "VOA", "NAXX", "EOE", "OS", "ULDR", "TOGC", "ICC", "RS",
+  "ARENA", "WSG", "AV", "AB", "EOTS", "WG", "SOTA", "IOC",
   "BREW", "HOLLOW",
 }
 
 GBB.Seasonal = {
-  [ "BREW" ] = { startDate = "09/19", endDate = "10/07" },
-  [ "HOLLOW" ] = { startDate = "10/16", endDate = "11/01" }
+  [ "BREW" ] = { startDate = "09/20", endDate = "10/06" },
+  [ "HOLLOW" ] = { startDate = "10/18", endDate = "11/01" },
 }
 
 GBB.SeasonalActiveEvents = {}
@@ -640,20 +735,44 @@ local function ConcatenateLists( Names )
 end
 
 function GBB.GetDungeonSort()
-  for eventName, eventData in pairs( GBB.Seasonal ) do
-    if GBB.Tool.InDateRange( eventData.startDate, eventData.endDate ) then
-      table.insert( GBB.TbcDungeonNames, 1, eventName )
-    else
-      table.insert( GBB.DebugNames, 1, eventName )
+  if has_wotlk then
+    for eventName, eventData in pairs( GBB.Seasonal ) do
+      if GBB.Tool.InDateRange( eventData.startDate, eventData.endDate ) then
+        table.insert( GBB.WotlkDungeonNames, 1, eventName )
+      else
+        table.insert( GBB.DebugNames, 1, eventName )
+      end
+    end
+  else
+    for eventName, eventData in pairs( GBB.Seasonal ) do
+      if GBB.Tool.InDateRange( eventData.startDate, eventData.endDate ) then
+        table.insert( GBB.TbcDungeonNames, 1, eventName )
+      else
+        table.insert( GBB.DebugNames, 1, eventName )
+      end
     end
   end
 
-  local dungeonOrder = { GBB.VanillDungeonNames, GBB.TbcDungeonNames, GBB.PvpNames, GBB.Misc, GBB.DebugNames }
+  local dungeonOrder = {
+    GBB.VanillaDungeonNames, 
+    GBB.TbcDungeonNames,  
+  }
+  if has_wotlk then
+    table.insert(dungeonOrder, GBB.WotlkDungeonNames)
+  end
+  table.insert(dungeonOrder, GBB.PvpNames)
+  table.insert(dungeonOrder, GBB.Misc)
+  table.insert(dungeonOrder, GBB.DebugNames)
 
   -- Why does Lua not having a fucking size function
   local vanillaDungeonSize = 0
-  for _, _ in pairs( GBB.VanillDungeonNames ) do
+  for _, _ in pairs( GBB.VanillaDungeonNames ) do
     vanillaDungeonSize = vanillaDungeonSize + 1
+  end
+  
+  local tbcDungeonSize = 0
+  for _, _ in pairs(GBB.TbcDungeonNames) do
+    tbcDungeonSize = tbcDungeonSize + 1
   end
 
   local debugSize = 0
@@ -661,13 +780,21 @@ function GBB.GetDungeonSort()
     debugSize = debugSize + 1
   end
 
-  GBB.TBCDUNGEONSTART = vanillaDungeonSize + 1
-  GBB.MAXDUNGEON = vanillaDungeonSize
-
   local tmp_dsort, concatenatedSize = ConcatenateLists( dungeonOrder )
   local dungeonSort = {}
-
-  GBB.TBCMAXDUNGEON = concatenatedSize - debugSize - 1
+  
+  GBB.NUM_DUNGEONS = concatenatedSize - debugSize - 1
+  GBB.MAXDUNGEON = vanillaDungeonSize
+  
+  if has_wotlk then
+    GBB.WOTLKMAXDUNGEON = GBB.NUM_DUNGEONS
+    GBB.TBCMAXDUNGEON = vanillaDungeonSize + tbcDungeonSize
+    GBB.WOTLKDUNGEONSTART = GBB.TBCMAXDUNGEON + 1
+  else
+    GBB.TBCMAXDUNGEON = GBB.NUM_DUNGEONS
+  end
+  
+  GBB.TBCDUNGEONSTART = vanillaDungeonSize + 1
 
   for dungeon, nb in pairs( tmp_dsort ) do
     dungeonSort[ nb ] = dungeon
@@ -682,8 +809,18 @@ function GBB.GetDungeonSort()
   return dungeonSort
 end
 
-local function DetermineVanillDungeonRange()
+local function DetermineVanillaDungeonRange()
   return GBB.PostTbcDungeonLevels
 end
 
-GBB.dungeonLevel = Union( DetermineVanillDungeonRange(), GBB.TbcDungeonLevels )
+if has_wotlk then
+  GBB.dungeonLevel = Union(
+    Union(
+      Union(DetermineVanillaDungeonRange(), GBB.TbcDungeonLevels), 
+      GBB.WotlkDungeonLevels),
+    GBB.PvpLevels)
+else
+  GBB.dungeonLevel = Union(
+    Union(DetermineVanillaDungeonRange(), GBB.TbcDungeonLevels),
+    GBB.PvpLevels)
+end

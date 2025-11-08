@@ -1,4 +1,7 @@
 local TOCNAME, GBB = GroupBulletinBoard_Loader.Main()
+
+local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
+
 local ChannelIDs
 local ChkBox_FilterDungeon
 local TbcChkBox_FilterDungeon
@@ -238,31 +241,57 @@ function GBB.OptionsInit()
   GBB.Options.AddSpace()
   CheckBox( "OnDebug", false )
 
-  -- Second Panel for TBC Dungeons
-  GBB.Options.AddPanel( GBB.L[ "TBCPanelFilter" ] )
-  GBB.Options.AddCategory( GBB.L[ "HeaderDungeon" ] )
-  GBB.Options.Indent( 10 )
+  if has_wotlk then
+    -- Third Panel for WotLK Dungeons
+    GBB.Options.AddPanel(GBB.L["WotlkPanelFilter"])
+    GBB.Options.AddCategory(GBB.L["HeaderDungeon"])
+    GBB.Options.Indent(10)
 
-  TbcChkBox_FilterDungeon = {}
+    WotlkChkBox_FilterDungeon={}
+      
+    for index=GBB.WOTLKDUNGEONSTART,GBB.WOTLKDUNGEONSTART + GBB.DUNGEONBREAK - 1 do
+      WotlkChkBox_FilterDungeon[index]=CheckBoxFilter(GBB.dungeonSort[index],true)
+    end
+    
+    GBB.Options.SetRightSide()
+    --GBB.Options.AddCategory("")
+    GBB.Options.Indent(10)	
+    for index=GBB.WOTLKDUNGEONSTART + GBB.DUNGEONBREAK,GBB.WOTLKMAXDUNGEON do
+      WotlkChkBox_FilterDungeon[index]=CheckBoxFilter(GBB.dungeonSort[index],true)
+    end
+      --GBB.Options.AddSpace()
+    CheckBoxChar("FilterLevel",false)
+    CheckBoxChar("DontFilterOwn",false)
 
-  for index = GBB.TBCDUNGEONSTART, GBB.TBCDUNGEONBREAK do
-    TbcChkBox_FilterDungeon[ index ] = CheckBoxFilter( GBB.dungeonSort[ index ], true )
+    CheckBoxChar("HeroicOnly", false)
+    CheckBoxChar("NormalOnly", false)
+  else
+    -- Second Panel for TBC Dungeons
+    GBB.Options.AddPanel( GBB.L[ "TBCPanelFilter" ] )
+    GBB.Options.AddCategory( GBB.L[ "HeaderDungeon" ] )
+    GBB.Options.Indent( 10 )
+
+    TbcChkBox_FilterDungeon = {}
+
+    for index = GBB.TBCDUNGEONSTART, GBB.TBCDUNGEONBREAK do
+      TbcChkBox_FilterDungeon[ index ] = CheckBoxFilter( GBB.dungeonSort[ index ], true )
+    end
+
+    GBB.Options.SetRightSide()
+    --GBB.Options.AddCategory("")
+    GBB.Options.Indent( 10 )
+    for index = GBB.TBCDUNGEONBREAK + 1, GBB.TBCMAXDUNGEON do
+      TbcChkBox_FilterDungeon[ index ] = CheckBoxFilter( GBB.dungeonSort[ index ], true )
+    end
+    --GBB.Options.AddSpace()
+    CheckBoxChar( "FilterLevel", false )
+    CheckBoxChar( "DontFilterOwn", false )
+
+    CheckBoxChar( "HeroicOnly", false )
+    CheckBoxChar( "NormalOnly", false )
+
+    --GBB.Options.AddSpace()
   end
-
-  GBB.Options.SetRightSide()
-  --GBB.Options.AddCategory("")
-  GBB.Options.Indent( 10 )
-  for index = GBB.TBCDUNGEONBREAK + 1, GBB.TBCMAXDUNGEON do
-    TbcChkBox_FilterDungeon[ index ] = CheckBoxFilter( GBB.dungeonSort[ index ], true )
-  end
-  --GBB.Options.AddSpace()
-  CheckBoxChar( "FilterLevel", false )
-  CheckBoxChar( "DontFilterOwn", false )
-
-  CheckBoxChar( "HeroicOnly", false )
-  CheckBoxChar( "NormalOnly", false )
-
-  --GBB.Options.AddSpace()
 
   GBB.Options.InLine()
   GBB.Options.AddButton( GBB.L[ "BtnSelectAll" ], function()
@@ -279,6 +308,37 @@ function GBB.OptionsInit()
 
   --GBB.Options.AddSpace()
   SetChatOption()
+  
+  if has_wotlk then
+    -- Second Panel for TBC Dungeons
+    GBB.Options.AddPanel(GBB.L["TBCPanelFilter"])
+    GBB.Options.AddCategory(GBB.L["HeaderDungeon"])
+    GBB.Options.Indent(10)
+
+    TbcChkBox_FilterDungeon={}
+    
+    local defaultChecked = false
+      
+    for index=GBB.TBCDUNGEONSTART,GBB.TBCDUNGEONSTART + GBB.DUNGEONBREAK - 1 do
+      TbcChkBox_FilterDungeon[index]=CheckBoxFilter(GBB.dungeonSort[index], defaultChecked)
+    end
+
+    GBB.Options.SetRightSide()
+    --GBB.Options.AddCategory("")
+    GBB.Options.Indent(10)	
+    for index=GBB.TBCDUNGEONSTART + GBB.DUNGEONBREAK, GBB.TBCMAXDUNGEON do
+      TbcChkBox_FilterDungeon[index]=CheckBoxFilter(GBB.dungeonSort[index], defaultChecked)
+    end
+
+    GBB.Options.InLine()
+    GBB.Options.AddButton(GBB.L["BtnSelectAll"],function()
+    DoSelectFilter(true, TbcChkBox_FilterDungeon, GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON) 
+    end)
+    GBB.Options.AddButton(GBB.L["BtnUnselectAll"],function()
+    DoSelectFilter(false, TbcChkBox_FilterDungeon, GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON)
+    end)
+    GBB.Options.EndInLine()
+  end
 
   -- Third panel - Filter
   GBB.Options.AddPanel( GBB.L[ "PanelFilter" ] )
@@ -344,10 +404,7 @@ function GBB.OptionsInit()
   CreateEditBoxDungeon( "Heroic", "", 450, 200 )
 
   GBB.Options.AddSpace()
-  for index = 1, GBB.MAXDUNGEON do
-    CreateEditBoxDungeon( GBB.dungeonSort[ index ], "", 445, 200 )
-  end
-  for index = GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON do
+  for index = 1, GBB.NUM_DUNGEONS do
     CreateEditBoxDungeon( GBB.dungeonSort[ index ], "", 445, 200 )
   end
   GBB.Options.AddSpace()

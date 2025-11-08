@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Title: Group Bulletin Board
 ## Notes: A bulletin board for LFG/LFM messages.
-## Version: 1.1.1
+## Version: 1.2.0
 ## Author: fondlez
 ## X-Website: http://github.com/fondlez
 ## X-Category: Chat/Communication

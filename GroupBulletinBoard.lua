@@ -5,6 +5,8 @@ local RAID_CLASS_COLORS_HEX = GBB.api.RAID_CLASS_COLORS_HEX
 
 local first_enter_world = true
 
+local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
+
 GBB.colors = {
   highlight = function( word )
     return string.format( "|cffff9f69%s|r", word )
@@ -339,7 +341,7 @@ function GBB.CreateTagList()
     GBB.heroicTagsLoc[ "custom" ] = GBB.Split( GBB.DB.Custom.Heroic )
 
     GBB.dungeonTagsLoc[ "custom" ] = {}
-    for index = 1, GBB.TBCMAXDUNGEON do
+    for index = 1, GBB.NUM_DUNGEONS do
       GBB.dungeonTagsLoc[ "custom" ][ GBB.dungeonSort[ index ] ] = GBB.Split( GBB.DB.Custom[ GBB.dungeonSort[ index ] ] )
     end
 
@@ -390,8 +392,11 @@ function GBB.Popup_Minimap( frame, notminimap )
 
   GBB.PopupDynamic:AddItem( GBB.L[ "HeaderSettings" ], false, GBB.Options.Open, 1 )
 
-  GBB.PopupDynamic:AddItem( GBB.L[ "TBCPanelFilter" ], false, GBB.Options.Open, 2 )
-
+  if has_wotlk then
+    GBB.PopupDynamic:AddItem( GBB.L[ "WotlkPanelFilter" ], false, GBB.Options.Open, 2 )
+  else
+    GBB.PopupDynamic:AddItem( GBB.L[ "TBCPanelFilter" ], false, GBB.Options.Open, 2 )
+  end
 
   GBB.PopupDynamic:AddItem( GBB.L[ "PanelAbout" ], false, GBB.Options.Open, 6 )
 

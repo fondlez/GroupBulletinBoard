@@ -452,7 +452,7 @@ function Options.AddDrop( DB, Var, Init, MenuItems )
       dropdown_width = text_width
     end
   end
-  if not GBB.api.is_tbc then
+  if GBB.api.client.version > GBB.api.client.TBC then
     UIDropDownMenu_SetWidth( Options.Btn[ ButtonName ], dropdown_width )
     UIDropDownMenu_SetText( Options.Btn[ ButtonName ], DB[ Var ] )
   else
@@ -466,7 +466,7 @@ function Options.AddDrop( DB, Var, Init, MenuItems )
     for _, v in pairs( MenuItems ) do
       info.text = v
       info.func = function()
-        if not GBB.api.is_tbc then
+        if GBB.api.client.version > GBB.api.client.TBC then
           UIDropDownMenu_SetText( Options.Btn[ ButtonName ], v)
         else
           UIDropDownMenu_SetText( v, Options.Btn[ ButtonName ] )
@@ -515,7 +515,7 @@ function Options.AddText( TXT, width, centre , canWrap )
   local textbox
 
   textbox = Options.CurrentPanel:CreateFontString( nil, "OVERLAY", "GameFontNormal" )
-  if not GBB.api.is_tbc then
+  if GBB.api.client.version > GBB.api.client.TBC then
     textbox:SetWordWrap( canWrap )
   else
     textbox:SetNonSpaceWrap( canWrap )
@@ -695,7 +695,7 @@ end
 
 function Options.Open( panel )
   if panel == nil or panel > #Options.Panel then panel = 1 end
-  if not GBB.api.is_tbc then
+  if GBB.api.client.version > GBB.api.client.TBC then
     InterfaceOptionsFrame_OpenToCategory( Options.Panel[ #Options.Panel ] )
     InterfaceOptionsFrame_OpenToCategory( Options.Panel[ #Options.Panel ] )
     InterfaceOptionsFrame_OpenToCategory( Options.Panel[ panel ] )

@@ -108,7 +108,7 @@ function GBB.SendMessage( ChannelName, Msg )
 end
 
 function GBB.AnnounceInit()
-  if not GBB.api.is_tbc then
+  if GBB.api.client.version > GBB.api.client.TBC then
     GroupBulletinBoardFrameSelectChannel:SetNormalFontObject( GBB.DB.FontSize )
     GroupBulletinBoardFrameAnnounce:SetNormalFontObject( GBB.DB.FontSize )
   else
