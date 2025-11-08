@@ -5,18 +5,106 @@ local _G = _G or getfenv(0)
 local api = {}
 addon.api = api
 
-local function getClient()
-    local display_version, build_number, build_date, ui_version 
+api.LOCALIZED_CLASS_NAMES_MALE = {
+  [ "DEATHKNIGHT" ] = "Deathknight",
+  [ "DRUID" ] = "Druid",
+  [ "HUNTER" ] = "Hunter",
+  [ "MAGE" ] = "Mage",
+  [ "PALADIN" ] = "Paladin",
+  [ "PRIEST" ] = "Priest",
+  [ "ROGUE" ] = "Rogue",
+  [ "SHAMAN" ] = "Shaman",
+  [ "WARLOCK" ] = "Warlock",
+  [ "WARRIOR" ] = "Warrior",
+}
+
+api.RAID_CLASS_COLORS_HEX = {
+  [ "DEATHKNIGHT" ] = "ffc41f3b",
+  [ "DRUID" ] = "ffff7d0a",
+  [ "HUNTER" ] = "ffabd473",
+  [ "MAGE" ] = "ff3fc7eb",
+  [ "PALADIN" ] = "fff58cba",
+  [ "PRIEST" ] = "ffffffff",
+  [ "ROGUE" ] = "fffff569",
+  [ "SHAMAN" ] = "ff0070de",
+  [ "WARLOCK" ] = "ff8788ee",
+  [ "WARRIOR" ] = "ffc79c6e",
+}
+
+do -- CLIENT VERSION
+  local GetBuildInfo = _G.GetBuildInfo
+  
+  local function getClient()
+      local display_version, build_number, build_date, ui_version 
         = GetBuildInfo()
-    ui_version = ui_version or 11200
-    return ui_version, display_version, build_number, build_date
+      ui_version = ui_version or 11200
+      return ui_version, display_version, build_number, build_date
+  end
+  
+  local client = {}
+  api.client = client
+  
+  client.VANILLA = 0
+  client.TBC = 1
+  client.WOTLK = 2
+  client.CATA = 3
+  client.MOP = 4
+  client.is_unknown = false
+  
+  local ui_version = getClient()
+  client.ui_version = ui_version
+  
+  local function getCompatibility()
+    if not ui_version or ui_version <= 11200 then 
+      return client.VANILLA
+    elseif ui_version >= 20000 and ui_version <= 20400 then 
+      return client.TBC
+    elseif ui_version >= 30000 and ui_version <= 30300 then
+      return client.WOTLK
+    elseif ui_version >= 40000 and ui_version <= 40300 then
+      return client.CATA
+    elseif ui_version >= 50000 and ui_version <= 50400 then
+      return client.MOP
+    else
+      client.is_unknown = true
+      return client.MOP
+    end
+  end
+  
+  client.version = getCompatibility()
 end
 
-local ui_version = getClient()
+do -- CONTENT
+  local GetAccountExpansionLevel = _G.GetAccountExpansionLevel
+  local MAX_PLAYER_LEVEL_TABLE  = _G.MAX_PLAYER_LEVEL_TABLE
+  
+  local content = {}
+  api.content = content
 
-api.is_tbc = false
-if ui_version >= 20000 and ui_version <= 20400 then
-    api.is_tbc = true
+  content.VANILLA = 0
+  content.TBC = 1
+  content.WOTLK = 2
+  content.expansion = GetAccountExpansionLevel and 
+    GetAccountExpansionLevel() or 0
+  content.maxPlayerLevel = MAX_PLAYER_LEVEL_TABLE and 
+    MAX_PLAYER_LEVEL_TABLE[expansion] or 60
+end
+
+do -- GROUP CHECKS
+  local GetNumPartyMembers = _G.GetNumPartyMembers
+  local GetNumRaidMembers = _G.GetNumRaidMembers
+
+  api.IsInParty = function() 
+    return GetNumRaidMembers() == 0 and GetNumPartyMembers() > 0 
+  end
+
+  api.IsInRaid = function() 
+    return GetNumRaidMembers() > 0 
+  end
+
+  api.IsInGroup = function()
+    return IsInParty() or IsInRaid()
+  end
 end
 
 api.UnitFullName = UnitFullName or UnitName
@@ -84,48 +172,5 @@ api.print = function( arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg1
   if (arg20) then chat_frame:AddMessage( tostring( arg20 ) ) end
 end
 
-do
-  local GetNumPartyMembers = GetNumPartyMembers
-  local GetNumRaidMembers = GetNumRaidMembers
-
-  api.IsInParty = function() 
-    return GetNumRaidMembers() == 0 and GetNumPartyMembers() > 0 
-  end
-
-  api.IsInRaid = function() 
-    return GetNumRaidMembers() > 0 
-  end
-
-  api.IsInGroup = function()
-    return IsInParty() or IsInRaid()
-  end
-end
-
-api.LOCALIZED_CLASS_NAMES_MALE = {
-  [ "DEATHKNIGHT" ] = "Deathknight",
-  [ "DRUID" ] = "Druid",
-  [ "HUNTER" ] = "Hunter",
-  [ "MAGE" ] = "Mage",
-  [ "PALADIN" ] = "Paladin",
-  [ "PRIEST" ] = "Priest",
-  [ "ROGUE" ] = "Rogue",
-  [ "SHAMAN" ] = "Shaman",
-  [ "WARLOCK" ] = "Warlock",
-  [ "WARRIOR" ] = "Warrior",
-}
-
-api.RAID_CLASS_COLORS_HEX = {
-  [ "DEATHKNIGHT" ] = "ffc41f3b",
-  [ "DRUID" ] = "ffff7d0a",
-  [ "HUNTER" ] = "ffabd473",
-  [ "MAGE" ] = "ff3fc7eb",
-  [ "PALADIN" ] = "fff58cba",
-  [ "PRIEST" ] = "ffffffff",
-  [ "ROGUE" ] = "fffff569",
-  [ "SHAMAN" ] = "ff0070de",
-  [ "WARLOCK" ] = "ff8788ee",
-  [ "WARRIOR" ] = "ffc79c6e",
-}
-
 SLASH_RL1 = "/rl"
-SlashCmdList[ "RL" ] = ReloadUI
+SlashCmdList[ "RL" ] = _G.ReloadUI
