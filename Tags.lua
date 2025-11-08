@@ -34,7 +34,7 @@ GBB.searchTagsLoc = langSplit( {
 } )
 
 GBB.badTagsLoc = langSplit( {
-  enGB = "layer boost",
+  enGB = "2s 3s 5s 2v2 2vs2 3v3 3v3s 5v5 5vs5 boost recruit apply social twitch stream hardcore times team speaking speaker info core",
   deDE = "fc",
   ruRU = "гильдию гильдия слой",
   frFR = "",
