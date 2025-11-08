@@ -686,6 +686,7 @@ function GBB.ParseMessage( msg, name, channel )
   local dungeonList, isGood, isBad, wordcount, isHeroic = GBB.GetDungeons( msg, name )
 
   if type( dungeonList ) ~= "table" then return end
+  if isBad then return end
 
   local dungeonTXT = ""
 
