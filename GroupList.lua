@@ -54,7 +54,8 @@ function GBB.AddGroupList( entry )
     guildcache[ entry.name ] = entry.guid and IsInGuild() and IsGuildMember( entry.guid )
   end
   if friendcache[ entry.name ] == nil then
-    friendcache[ entry.name ] = entry.guid and C_FriendList.IsFriend( entry.guid )
+    --friendcache[ entry.name ] = entry.guid and C_FriendList.IsFriend( entry.guid )
+    friendcache[ entry.name ] = false
   end
 
   if pastplayercache[ entry.name ] == nil then

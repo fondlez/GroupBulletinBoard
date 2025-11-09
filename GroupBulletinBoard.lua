@@ -666,7 +666,7 @@ local function Event_CHAT_MSG_SYSTEM( arg1 )
       info = " "
     end
 
-    local friend = C_FriendList.GetFriendInfo( name )
+    local friend = false --C_FriendList.GetFriendInfo( name )
     if friend then
       level = friend.level or level
       if friend.className and GBB.Tool.NameToClass[ friend.className ] then

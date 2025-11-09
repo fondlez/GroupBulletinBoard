@@ -313,7 +313,7 @@ local function IgnoreRequest( name )
     end
   end
   GBB.ClearNeeded = true
-  C_FriendList.AddIgnore( name )
+  --C_FriendList.AddIgnore( name )
 end
 
 function GBB.Clear()
