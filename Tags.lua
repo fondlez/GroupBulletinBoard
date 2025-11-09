@@ -24,7 +24,7 @@ GBB.suffixTagsLoc = langSplit( {
 
 GBB.searchTagsLoc = langSplit( {
   enGB =
-  "group lfg lf lfm lf1m lf2m lf3m lf4m lf5m lftank lfheal lfhealer lfdps lfdd dd heal healer tank dps druid dudu huntard hunter mage pala pally paladin priest rogue rouge shaman lock warlock warrior elite quest elitequest elitequests",
+  "group lfg lf lfm lf1m lf2m lf3m lf4m lf5m lftank lfheal lfhealer lfdps lfdd dd heal healer healers tank tanks dps druid dudu huntard hunter mage pala pally paladin priest rogue rouge shaman lock warlock warrior elite quest elitequest elitequests",
 
   deDE =
   "gesucht suche suchen sucht such gruppe grp sfg sfm druide dudu jäger magier priester warri schurke rschami schamane hexer hexenmeister hm krieger heiler xheiler go run",
@@ -36,7 +36,7 @@ GBB.searchTagsLoc = langSplit( {
 } )
 
 GBB.badTagsLoc = langSplit( {
-  enGB = "2s 3s 5s 2v2 2vs2 3v3 3v3s 5v5 5vs5 boost recruit apply social twitch stream hardcore times team speaking speaker info core",
+  enGB = "2s 3s 5s 2v2 2vs2 3v3 3v3s 5v5 5vs5 boost recruit apply social twitch stream hardcore times team speaking speaker core",
   deDE = "fc",
   ruRU = "гильдию гильдия слой",
   frFR = "",
@@ -412,7 +412,7 @@ if has_wotlk then
     ["VH"] =  "violet hold vh",
     ["UK"] =  "utgarde utk uk",
     ["UP"] =  "pinnacle utp",
-    ["TOC"] =  "champion champ",
+    ["TOC"] =  "champion champ toc5",
     ["FOS"] =  "forge soul fos",
     ["POS"] =  "saron pos pit",
     ["HOR"] =  "reflection hor",
