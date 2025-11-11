@@ -46,6 +46,14 @@ exist, named \"LFG\" with all channels subscribed. Removes LFG heavy spam
 channels from default chat tab
 * `/gbb` - open main window
 
+## Frequently Asked Questions (FAQ)
+
+### Q. How to blacklist a word?
+
+From GroupBulletinBoard Settings, click on "Search patterns", make sure "Custom"
+is checked, add words to "Blacklist words", then reload the user interface, e.g. 
+using the `/reload` or `/reloadui` command.
+
 ## Credits
 
 ### Original Addon
