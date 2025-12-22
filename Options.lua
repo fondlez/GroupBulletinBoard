@@ -242,7 +242,7 @@ function GBB.OptionsInit()
   CheckBox( "OnDebug", false )
 
   if has_wotlk then
-    -- Third Panel for WotLK Dungeons
+    -- First Panel for WotLK Dungeons
     GBB.Options.AddPanel(GBB.L["WotlkPanelFilter"])
     GBB.Options.AddCategory(GBB.L["HeaderDungeon"])
     GBB.Options.Indent(10)
@@ -265,8 +265,17 @@ function GBB.OptionsInit()
 
     CheckBoxChar("HeroicOnly", false)
     CheckBoxChar("NormalOnly", false)
+    
+    GBB.Options.InLine()
+    GBB.Options.AddButton( GBB.L[ "BtnSelectAll" ], function()
+      DoSelectFilter( true, WotlkChkBox_FilterDungeon, GBB.WOTLKDUNGEONSTART, GBB.WOTLKMAXDUNGEON - 2 ) -- Doing -2 to not select trade and misc
+    end )
+    GBB.Options.AddButton( GBB.L[ "BtnUnselectAll" ], function()
+      DoSelectFilter( false, WotlkChkBox_FilterDungeon, GBB.WOTLKDUNGEONSTART, GBB.WOTLKMAXDUNGEON )
+    end )
+    GBB.Options.EndInLine()
   else
-    -- Second Panel for TBC Dungeons
+    -- First Panel for TBC Dungeons
     GBB.Options.AddPanel( GBB.L[ "TBCPanelFilter" ] )
     GBB.Options.AddCategory( GBB.L[ "HeaderDungeon" ] )
     GBB.Options.Indent( 10 )
@@ -291,16 +300,16 @@ function GBB.OptionsInit()
     CheckBoxChar( "NormalOnly", false )
 
     --GBB.Options.AddSpace()
+    
+    GBB.Options.InLine()
+    GBB.Options.AddButton( GBB.L[ "BtnSelectAll" ], function()
+      DoSelectFilter( true, TbcChkBox_FilterDungeon, GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON - 2 ) -- Doing -2 to not select trade and misc
+    end )
+    GBB.Options.AddButton( GBB.L[ "BtnUnselectAll" ], function()
+      DoSelectFilter( false, TbcChkBox_FilterDungeon, GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON )
+    end )
+    GBB.Options.EndInLine()
   end
-
-  GBB.Options.InLine()
-  GBB.Options.AddButton( GBB.L[ "BtnSelectAll" ], function()
-    DoSelectFilter( true, TbcChkBox_FilterDungeon, GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON - 2 ) -- Doing -2 to not select trade and misc
-  end )
-  GBB.Options.AddButton( GBB.L[ "BtnUnselectAll" ], function()
-    DoSelectFilter( false, TbcChkBox_FilterDungeon, GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON )
-  end )
-  GBB.Options.EndInLine()
 
   GBB.Options.Indent( -10 )
 
@@ -340,7 +349,7 @@ function GBB.OptionsInit()
     GBB.Options.EndInLine()
   end
 
-  -- Third panel - Filter
+  -- Third panel for Vanilla Dungeons
   GBB.Options.AddPanel( GBB.L[ "PanelFilter" ] )
   GBB.Options.AddCategory( GBB.L[ "HeaderDungeon" ] )
   GBB.Options.Indent( 10 )
