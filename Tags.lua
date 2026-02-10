@@ -421,7 +421,7 @@ if has_wotlk then
     ["NAX"] = "placeholdernax",
     ["NAXX"] =  "naxxramas naxx nax nax10 naxx10 nax25 naxx25",
     ["EOE"] =  "eoe eternity malygos maly eoe10 eoe25",
-    ["OS"] =  "obsidian sanctum sarth sartharion os3d sarth3d os2d sarth2d",
+    ["OS"] =  "obsidian sanctum sarth sartharion os3d sarth3d os2d sarth2d drake os25 os10",
     ["ULDR"] =  "ulduar uld",
     ["TOGC"] =  "togc totc totc10 totc25 toc10 toc10n toc10hc toc25 toc25n toc tc",
     ["ONY"] =  "onyxia's ony onyxia",
