@@ -1,7 +1,18 @@
-# GroupBulletinBoard
+# GroupBulletinBoard for 3.3.5a
 
 ### [Download Latest](https://github.com/ExoJdi/GroupBulletinBoard_3.3.5a/releases/latest)
 
+Main changes:
+Fixed class color and class icon display;
+Fixed the "Don't Truncate" feature - now works correctly in both modes;
+Fixed tooltip display on items and achievements (the profession window opens on click);
+Added collection of /shout and /emote requests;
+Added new "By Priority" request filter logic:
+WotLK>TBC>Classic
+Raid>Dungeons
+Raid/Dungeons>Trade>Misc;
+Added the ability to choose the font and font size;
+And a bunch of minor fixes.
 This is a port to WotLK (3.3.5a)!
 
 * Fork - WotLK (3.3.5a) port: [fondlez](https://github.com/fondlez)
@@ -21,13 +32,12 @@ To open the settings, use slash command: **`/gbb`** or click the minimap icon.
 ## Graphical Interface
 
 ### Main Window
-![Main Window screenshot]![Uploading image.png…]()![Uploading image.png…]()
-
+<img width="773" height="728" alt="MainWindow" src="https://github.com/user-attachments/assets/16e58b45-02f1-422d-a3b9-c0f6a04932fa" />
 
 
 ### Interface Settings
-![Interface Settings screenshot](![Uploading image.png…]()
-)
+<img width="661" height="589" alt="Settings" src="https://github.com/user-attachments/assets/f95f7811-b00f-4bed-bf18-57adbb5dfc65" />
+
 
 ## Slash Commands
 
