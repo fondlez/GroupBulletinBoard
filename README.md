@@ -1,8 +1,8 @@
 # GroupBulletinBoard
 
-### [Download Latest](https://github.com/fondlez/GroupBulletinBoard/releases/latest)
+### [Download Latest](https://github.com/ExoJdi/GroupBulletinBoard_3.3.5a/releases/latest)
 
-This is a port to WotLK (3.3.5a) of a TBC backport of a Classic TBC addon!
+This is a port to WotLK (3.3.5a)!
 
 * Fork - WotLK (3.3.5a) port: [fondlez](https://github.com/fondlez)
 
@@ -21,7 +21,8 @@ To open the settings, use slash command: **`/gbb`** or click the minimap icon.
 ## Graphical Interface
 
 ### Main Window
-![Main Window screenshot]![Uploading image.png…]()
+![Main Window screenshot]![Uploading image.png…]()![Uploading image.png…]()
+
 
 
 ### Interface Settings
