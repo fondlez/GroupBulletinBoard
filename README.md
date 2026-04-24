@@ -2,7 +2,7 @@
 
 ### [Download Latest](https://github.com/ExoJdi/GroupBulletinBoard_3.3.5a/releases/latest)
 
-##Main changes:
+## Main changes:
 - Fixed class color and class icon display;
 - Fixed the "Don't Truncate" feature - now works correctly in both modes;
 - Fixed tooltip display on items and achievements (the profession window opens on click);
@@ -15,7 +15,7 @@
 - And a bunch of minor fixes.
 
   
-##This is a port to WotLK (3.3.5a)!
+## This is a port to WotLK (3.3.5a)!
 
 * Fork - WotLK (3.3.5a) port: [fondlez](https://github.com/fondlez)
 
