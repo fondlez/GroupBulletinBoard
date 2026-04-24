@@ -77,17 +77,24 @@ end
 do -- CONTENT
   local GetAccountExpansionLevel = _G.GetAccountExpansionLevel
   local MAX_PLAYER_LEVEL_TABLE  = _G.MAX_PLAYER_LEVEL_TABLE
-  
+
   local content = {}
   api.content = content
 
   content.VANILLA = 0
   content.TBC = 1
   content.WOTLK = 2
-  content.expansion = GetAccountExpansionLevel and 
-    GetAccountExpansionLevel() or 0
-  content.maxPlayerLevel = MAX_PLAYER_LEVEL_TABLE and 
-    MAX_PLAYER_LEVEL_TABLE[expansion] or 60
+  
+  local rawExpansion = GetAccountExpansionLevel and GetAccountExpansionLevel() or nil
+  content.expansion = (rawExpansion and rawExpansion > 0 and rawExpansion)
+    or client.version
+    or 0
+
+
+  local maxLevelByExpansion = { [0] = 60, [1] = 70, [2] = 80, [3] = 85, [4] = 90 }
+  content.maxPlayerLevel = (MAX_PLAYER_LEVEL_TABLE and MAX_PLAYER_LEVEL_TABLE[content.expansion])
+    or maxLevelByExpansion[content.expansion]
+    or 80
 end
 
 do -- GROUP CHECKS
@@ -174,3 +181,4 @@ end
 
 SLASH_RL1 = "/rl"
 SlashCmdList[ "RL" ] = _G.ReloadUI
+print("Backport.lua loaded, api =", addon.api)

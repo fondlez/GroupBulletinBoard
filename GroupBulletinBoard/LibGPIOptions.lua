@@ -14,7 +14,8 @@ function Options.Init( doOk, doRefresh, doDefault )
   Options._DoRefresh = doRefresh
   Options._DoDefault = doDefault
 
-
+  Options.Slider = {}
+  Options.SliderText = {}
   Options.Panel = {}
   Options.Frames = {}
   Options.CBox = {}
@@ -30,89 +31,114 @@ function Options.Init( doOk, doRefresh, doDefault )
 end
 
 function Options.DoOk()
-  for name, cbox in pairs( Options.CBox ) do
-    if Options.Vars[ name .. "_db" ] ~= nil and Options.Vars[ name ] ~= nil then
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] = cbox:GetChecked() and true or false
+  for name, cbox in pairs(Options.CBox) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
+      Options.Vars[name .. "_db"][Options.Vars[name]] = cbox:GetChecked() and true or false
     end
   end
 
-  for name, color in pairs( Options.Color ) do
-    if Options.Vars[ name .. "_db" ] ~= nil and Options.Vars[ name ] ~= nil then
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].r = color.ColR
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].g = color.ColG
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].b = color.ColB
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].a = color.ColA
+  for name, color in pairs(Options.Color) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
+      Options.Vars[name .. "_db"][Options.Vars[name]].r = color.ColR
+      Options.Vars[name .. "_db"][Options.Vars[name]].g = color.ColG
+      Options.Vars[name .. "_db"][Options.Vars[name]].b = color.ColB
+      Options.Vars[name .. "_db"][Options.Vars[name]].a = color.ColA
     end
   end
 
-  for name, edit in pairs( Options.Edit ) do
-    if Options.Vars[ name .. "_onlynumbers" ] then
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] = edit:GetNumber()
+  for name, edit in pairs(Options.Edit) do
+    if Options.Vars[name .. "_onlynumbers"] then
+      Options.Vars[name .. "_db"][Options.Vars[name]] = edit:GetNumber()
     else
-      if Options.Vars[ name .. "_suggestion" ] and Options.Vars[ name .. "_suggestion" ] ~= "" then
-        if edit:GetText() == Options.Vars[ name .. "_suggestion" ] then
-          Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] = ""
+      if Options.Vars[name .. "_suggestion"] and Options.Vars[name .. "_suggestion"] ~= "" then
+        if edit:GetText() == Options.Vars[name .. "_suggestion"] then
+          Options.Vars[name .. "_db"][Options.Vars[name]] = ""
         else
-          Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] = edit:GetText()
+          Options.Vars[name .. "_db"][Options.Vars[name]] = edit:GetText()
         end
       else
-        Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] = edit:GetText()
+        Options.Vars[name .. "_db"][Options.Vars[name]] = edit:GetText()
       end
+    end
+  end
+
+  -- Save slider values
+  for name, slider in pairs(Options.Slider) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
+      Options.Vars[name .. "_db"][Options.Vars[name]] = slider:GetValue()
     end
   end
 end
 
 function Options.DoRefresh()
-  for name, cbox in pairs( Options.CBox ) do
-    if Options.Vars[ name .. "_db" ] ~= nil and Options.Vars[ name ] ~= nil then
-      cbox:SetChecked( Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] )
+  for name, cbox in pairs(Options.CBox) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
+      cbox:SetChecked(Options.Vars[name .. "_db"][Options.Vars[name]])
     end
   end
 
-  for name, color in pairs( Options.Color ) do
-    if Options.Vars[ name .. "_db" ] ~= nil and Options.Vars[ name ] ~= nil then
+  for name, color in pairs(Options.Color) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
       color:GetNormalTexture():SetVertexColor(
-        Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].r,
-        Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].g,
-        Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].b,
-        Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].a
+        Options.Vars[name .. "_db"][Options.Vars[name]].r,
+        Options.Vars[name .. "_db"][Options.Vars[name]].g,
+        Options.Vars[name .. "_db"][Options.Vars[name]].b,
+        Options.Vars[name .. "_db"][Options.Vars[name]].a
       )
-      color.ColR, color.ColG, color.ColB, color.ColA = Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].r,
-          Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].g, Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ]
-          .b,
-          Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].a
+      color.ColR, color.ColG, color.ColB, color.ColA = Options.Vars[name .. "_db"][Options.Vars[name]].r,
+          Options.Vars[name .. "_db"][Options.Vars[name]].g, Options.Vars[name .. "_db"][Options.Vars[name]].b,
+          Options.Vars[name .. "_db"][Options.Vars[name]].a
     end
   end
 
-
-  for name, edit in pairs( Options.Edit ) do
-    if Options.Vars[ name .. "_onlynumbers" ] then
-      edit:SetNumber( Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] )
+  for name, edit in pairs(Options.Edit) do
+    if Options.Vars[name .. "_onlynumbers"] then
+      edit:SetNumber(Options.Vars[name .. "_db"][Options.Vars[name]])
     else
-      edit:SetText( Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] )
-      Options.__EditBoxLostFocus( edit )
+      edit:SetText(Options.Vars[name .. "_db"][Options.Vars[name]])
+      Options.__EditBoxLostFocus(edit)
+    end
+  end
+
+  -- Refresh sliders
+  for name, slider in pairs(Options.Slider) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
+      local value = Options.Vars[name .. "_db"][Options.Vars[name]]
+      slider:SetValue(value)
+      local text = Options.SliderText[name]
+      if text then text:SetText(value) end
     end
   end
 end
 
 function Options.DoDefault()
-  for name, cbox in pairs( Options.CBox ) do
-    if Options.Vars[ name .. "_db" ] ~= nil and Options.Vars[ name ] ~= nil then
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] = Options.Vars[ name .. "_init" ]
+  for name, cbox in pairs(Options.CBox) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
+      Options.Vars[name .. "_db"][Options.Vars[name]] = Options.Vars[name .. "_init"]
     end
   end
 
-  for name, color in pairs( Options.Color ) do
-    if Options.Vars[ name .. "_db" ] ~= nil and Options.Vars[ name ] ~= nil then
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].r = Options.Vars[ name .. "_init" ].r
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].g = Options.Vars[ name .. "_init" ].g
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].b = Options.Vars[ name .. "_init" ].b
-      Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ].a = Options.Vars[ name .. "_init" ].a
+  for name, color in pairs(Options.Color) do
+    if Options.Vars[name .. "_db"] ~= nil and Options.Vars[name] ~= nil then
+      Options.Vars[name .. "_db"][Options.Vars[name]].r = Options.Vars[name .. "_init"].r
+      Options.Vars[name .. "_db"][Options.Vars[name]].g = Options.Vars[name .. "_init"].g
+      Options.Vars[name .. "_db"][Options.Vars[name]].b = Options.Vars[name .. "_init"].b
+      Options.Vars[name .. "_db"][Options.Vars[name]].a = Options.Vars[name .. "_init"].a
     end
   end
 
-  for name, _ in pairs( Options.Edit ) do
-    Options.Vars[ name .. "_db" ][ Options.Vars[ name ] ] = Options.Vars[ name .. "_init" ]
+  for name, _ in pairs(Options.Edit) do
+    Options.Vars[name .. "_db"][Options.Vars[name]] = Options.Vars[name .. "_init"]
+  end
+
+  -- Reset sliders to default values
+  for name, slider in pairs(Options.Slider) do
+    if Options.Vars[name .. "_init"] ~= nil then
+      Options.Vars[name .. "_db"][Options.Vars[name]] = Options.Vars[name .. "_init"]
+      slider:SetValue(Options.Vars[name .. "_init"])
+      local text = Options.SliderText[name]
+      if text then text:SetText(Options.Vars[name .. "_init"]) end
+    end
   end
 
   Options.DoRefresh()
@@ -704,4 +730,47 @@ function Options.Open( panel )
     InterfaceOptionsFrame_OpenToFrame( Options.Panel[ #Options.Panel ] )
     InterfaceOptionsFrame_OpenToFrame( Options.Panel[ panel ] )
   end
+end
+function Options.AddSlider(DB, Var, Init, minVal, maxVal, step)
+  local c = Options.Frames.count + 1
+  Options.Frames.count = c
+  local SliderName = Options.Prefix .. "SLIDER_" .. c
+
+  Options.Vars[SliderName] = Var
+  Options.Vars[SliderName .. "_db"] = DB
+  Options.Vars[SliderName .. "_init"] = Init
+  Options.Vars[SliderName .. "_min"] = minVal
+  Options.Vars[SliderName .. "_max"] = maxVal
+  Options.Vars[SliderName .. "_step"] = step or 1
+
+  if DB[Var] == nil then DB[Var] = Init end
+
+  local slider = CreateFrame("Slider", SliderName, Options.CurrentPanel, "OptionsSliderTemplate")
+  slider:SetPoint("TOPLEFT", Options.NextRelativ, "BOTTOMLEFT", Options.NextRelativX, Options.NextRelativY - 5)
+  slider:SetWidth(200)
+  slider:SetHeight(16)
+  slider:SetMinMaxValues(minVal, maxVal)
+  slider:SetValueStep(step)
+  slider:SetValue(DB[Var])
+  slider:SetOrientation("HORIZONTAL")
+
+  local text = slider:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  text:SetPoint("RIGHT", slider, "LEFT", -10, 0)
+  text:SetText(DB[Var])
+
+  slider:SetScript("OnValueChanged", function(self, value)
+    local rounded = math.floor(value / step + 0.5) * step
+    self:SetValue(rounded)
+    text:SetText(rounded)
+    DB[Var] = rounded
+  end)
+
+  Options.Slider[SliderName] = slider
+  Options.SliderText[SliderName] = text
+
+  Options.NextRelativ = SliderName
+  Options.NextRelativX = 0
+  Options.NextRelativY = -25
+
+  return slider
 end

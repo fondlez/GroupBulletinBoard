@@ -1,10 +1,13 @@
 local _, GBB = GroupBulletinBoard_Loader.Main()
+if not GBB then
+  GBB = GroupBulletinBoard_Addon or {}
+end
 
-function GBB.CreateChatFrame( name, ... )
-  local Frame = name and FCF_OpenNewWindow( name, true ) or ChatFrame1
+function GBB.CreateChatFrame(name, ...)
+  local Frame = name and FCF_OpenNewWindow(name, true) or ChatFrame1
   if (...) then
-    for index = 1, select( '#', ... ) do
-      ChatFrame_AddMessageGroup( Frame, select( index, ... ) )
+    for index = 1, select('#', ...) do
+      ChatFrame_AddMessageGroup(Frame, select(index, ...))
     end
   end
   return Frame
@@ -14,32 +17,32 @@ local function GetChannels()
   local channelList = { GetChannelList() }
   local channels = {}
   for i = 1, #channelList, 2 do
-    table.insert( channels, {
-      id = channelList[ i ],
-      name = channelList[ i + 1 ]
-    } )
+    table.insert(channels, {
+      id = channelList[i],
+      name = channelList[i + 1]
+    })
   end
 
   return channels
 end
 
-local function SetChannels( ChanNames, Frame, ShouldRemove )
+local function SetChannels(ChanNames, Frame, ShouldRemove)
   ShouldRemove = ShouldRemove or false
 
-  for k, _ in pairs( ChanNames ) do
+  for k, _ in pairs(ChanNames) do
     if ShouldRemove == true and k ~= "" then
-      ChatFrame_RemoveChannel( Frame, k )
+      ChatFrame_RemoveChannel(Frame, k)
     elseif k ~= "" then
-      ChatFrame_AddChannel( Frame, k )
+      ChatFrame_AddChannel(Frame, k)
     end
   end
 end
 
-local function MissingChannels( ChanNames, ChannelsToAdd )
+local function MissingChannels(ChanNames, ChannelsToAdd)
   local missingChannels = {}
-  for k, _ in pairs( ChannelsToAdd ) do
-    if ChanNames[ k ] == nil and ChanNames[ k ] ~= "" then
-      missingChannels[ k ] = 1
+  for k, _ in pairs(ChannelsToAdd) do
+    if ChanNames[k] == nil and ChanNames[k] ~= "" then
+      missingChannels[k] = 1
     end
   end
   return missingChannels
@@ -49,9 +52,9 @@ function GBB.InsertChat()
   local chatFrameInit = false
   local tabName = "LFG"
 
-  -- Don't create a new tab if it already exists
+
   for i = 1, NUM_CHAT_WINDOWS do
-    local tab = _G[ "ChatFrame" .. i .. "Tab" ]
+    local tab = _G["ChatFrame" .. i .. "Tab"]
     local name = tab:GetText()
     local shown = tab:IsShown()
     if name == tabName and shown == true then
@@ -63,96 +66,89 @@ function GBB.InsertChat()
     return
   end
 
-  local ChannelsToAdd = { [ GBB.L[ "world_channel" ] ] = 1, }
+  local ChannelsToAdd = { [GBB.L["world_channel"]] = 1, }
 
-  -- Create new chat frame and new tab with no default message groups
 
-  local Frame = GBB.CreateChatFrame( tabName, "SAY", "EMOTE", "YELL", "GUILD", "OFFICER", "PARTY", "PARTY_LEADER", "RAID",
+
+  local Frame = GBB.CreateChatFrame(tabName, "SAY", "EMOTE", "YELL", "GUILD", "OFFICER", "PARTY", "PARTY_LEADER", "RAID",
     "RAID_LEADER", "RAID_WARNING", "BATTLEGROUND", "BATTLEGROUND_LEADER", "SYSTEM", "MONSTER_WHISPER",
-    "MONSTER_BOSS_WHISPER", "INSTANCE_CHAT", "INSTANCE_CHAT_LEADER" )
+    "MONSTER_BOSS_WHISPER", "INSTANCE_CHAT", "INSTANCE_CHAT_LEADER")
 
-  -- Get all channels the player has joined
   local channels = GetChannels()
   local channelNames = {}
-  for _, v in pairs( channels ) do
-    channelNames[ v[ "name" ] ] = v[ "isDisabled" ]
+  for _, v in pairs(channels) do
+    channelNames[v["name"]] = v["isDisabled"]
   end
 
-  -- Figures out what spammy LFG channels ie LookingForGroup the user hasn't joined
-  -- if they are missing any channels then join them in the new chat tab
-  local missingChannels = MissingChannels( channelNames, ChannelsToAdd )
+ 
+  local missingChannels = MissingChannels(channelNames, ChannelsToAdd)
 
-  for k, _ in pairs( missingChannels ) do
-    JoinChannelByName( k, nil, Frame:GetID() )
-    -- since if missingChannels contains any channels that means they would be absent from channelNames
-    channelNames[ k ] = 0
+  for k, _ in pairs(missingChannels) do
+    JoinChannelByName(k, nil, Frame:GetID())
+
+    channelNames[k] = 0
   end
 
-  -- Join every single possible channel including any channels that user was missing before
-  SetChannels( channelNames, Frame, false )
+  SetChannels(channelNames, Frame, false)
 
-  -- Remove all LFG Spammy channels from default chat tab
-  --SetChannels( ChannelsToAdd, ChatFrame1, true )
-
-  -- Set focus back to default tab and enable chat notifications
-  FCF_SelectDockFrame( ChatFrame1 )
-  GBB.DB[ "NotifyChat" ] = true
+  FCF_SelectDockFrame(ChatFrame1)
+  GBB.DB["NotifyChat"] = true
   GBB.OptionsUpdate()
 end
 
-function GBB.SendMessage( ChannelName, Msg )
-  local index = GetChannelName( ChannelName ) -- It finds General is a channel at index 1
+function GBB.SendMessage(ChannelName, Msg)
+  local index = GetChannelName(ChannelName)
   if (index ~= nil) then
-    SendChatMessage( Msg, "CHANNEL", nil, index );
+    SendChatMessage(Msg, "CHANNEL", nil, index);
   end
 end
 
 function GBB.AnnounceInit()
   if GBB.api.client.version > GBB.api.client.TBC then
-    GroupBulletinBoardFrameSelectChannel:SetNormalFontObject( GBB.DB.FontSize )
-    GroupBulletinBoardFrameAnnounce:SetNormalFontObject( GBB.DB.FontSize )
+    GroupBulletinBoardFrameSelectChannel:SetNormalFontObject("GameFontNormal")
+    GroupBulletinBoardFrameAnnounce:SetNormalFontObject("GameFontNormal")
   else
-    GroupBulletinBoardFrameSelectChannel:SetTextFontObject( GBB.DB.FontSize )
-    GroupBulletinBoardFrameAnnounce:SetTextFontObject( GBB.DB.FontSize )
+    GroupBulletinBoardFrameSelectChannel:SetTextFontObject("GameFontNormal")
+    GroupBulletinBoardFrameAnnounce:SetTextFontObject("GameFontNormal")
   end
 
   local msg_request = GBB.DBChar.msg_request
 
   if msg_request and msg_request ~= "" then
-    GroupBulletinBoardFrameAnnounceMsg:SetTextColor( 1, 1, 1 )
-    GroupBulletinBoardFrameAnnounceMsg:SetText( msg_request )
+    GroupBulletinBoardFrameAnnounceMsg:SetTextColor(1, 1, 1)
+    GroupBulletinBoardFrameAnnounceMsg:SetText(msg_request)
   else
-    GroupBulletinBoardFrameAnnounceMsg:SetTextColor( 0.6, 0.6, 0.6 )
-    GroupBulletinBoardFrameAnnounceMsg:SetText( GBB.L[ "msgRequestHere" ] )
+    GroupBulletinBoardFrameAnnounceMsg:SetTextColor(0.6, 0.6, 0.6)
+    GroupBulletinBoardFrameAnnounceMsg:SetText(GBB.L["msgRequestHere"])
   end
 
-  GroupBulletinBoardFrameAnnounce:SetText( GBB.L[ "BtnPostMsg" ] )
-  GroupBulletinBoardFrameAnnounceMsg:HighlightText( 0, 0 )
-  GroupBulletinBoardFrameAnnounceMsg:SetCursorPosition( 0 )
+  GroupBulletinBoardFrameAnnounce:SetText(GBB.L["BtnPostMsg"])
+  GroupBulletinBoardFrameAnnounceMsg:HighlightText(0, 0)
+  GroupBulletinBoardFrameAnnounceMsg:SetCursorPosition(0)
   GroupBulletinBoardFrameAnnounce:Disable()
-  GroupBulletinBoardFrameAnnounceMsg:SetWidth( GroupBulletinBoardFrame:GetWidth() / 2 - 65 )
+  GroupBulletinBoardFrameAnnounceMsg:SetWidth(GroupBulletinBoardFrame:GetWidth() / 2 - 65)
 end
 
 function GBB.FocusLost()
   local t = GroupBulletinBoardFrameAnnounceMsg:GetText()
 
   if t == "" then
-    GroupBulletinBoardFrameAnnounceMsg:SetTextColor( 0.6, 0.6, 0.6 )
-    GroupBulletinBoardFrameAnnounceMsg:SetText( GBB.L[ "msgRequestHere" ] )
+    GroupBulletinBoardFrameAnnounceMsg:SetTextColor(0.6, 0.6, 0.6)
+    GroupBulletinBoardFrameAnnounceMsg:SetText(GBB.L["msgRequestHere"])
   end
 end
 
 function GBB.GetFocus()
   local t = GroupBulletinBoardFrameAnnounceMsg:GetText()
-  if t == GBB.L[ "msgRequestHere" ] then
-    GroupBulletinBoardFrameAnnounceMsg:SetTextColor( 1, 1, 1 )
-    GroupBulletinBoardFrameAnnounceMsg:SetText( "" )
+  if t == GBB.L["msgRequestHere"] then
+    GroupBulletinBoardFrameAnnounceMsg:SetTextColor(1, 1, 1)
+    GroupBulletinBoardFrameAnnounceMsg:SetText("")
   end
 end
 
 function GBB.EditAnnounceMessage_Changed()
   local t = GroupBulletinBoardFrameAnnounceMsg:GetText()
-  if t == nil or t == "" or t == GBB.L[ "msgRequestHere" ] then
+  if t == nil or t == "" or t == GBB.L["msgRequestHere"] then
     GBB.DBChar.msg_request = nil
     GroupBulletinBoardFrameAnnounce:Disable()
   else
@@ -164,29 +160,68 @@ end
 function GBB.Announce()
   local msg = GroupBulletinBoardFrameAnnounceMsg:GetText()
 
-  if msg ~= nil and msg ~= "" and msg ~= GBB.L[ "msgRequestHere" ] then
-    GBB.SendMessage( GBB.DB.AnnounceChannel, msg )
+  if msg ~= nil and msg ~= "" and msg ~= GBB.L["msgRequestHere"] then
+    GBB.SendMessage(GBB.DB.AnnounceChannel, msg)
     GroupBulletinBoardFrameAnnounceMsg:ClearFocus()
   end
 end
 
-function GBB.CreateChannelPulldown( frame, level, menuList )
+function GBB.HookChatColors()
+  if not ChatFrame_AddMessageEventFilter then return end
+
+  local function ClassColorFilter(chatFrame, event, msg, author, ...)
+    if not GBB.DB or not GBB.DB.ColorByClass then return false end
+    if not author or author == "" then return false end
+    local name = author:match("^([^%-]+)") or author
+    local class = GBB.RealClass and (GBB.RealClass[name] or GBB.RealClass[author])
+    if not class then return false end
+    if not GBB.DB.ShowClassIcon then return false end
+    if not GBB.Tool or not GBB.Tool.IconClass or not GBB.Tool.IconClass[class] then return false end
+    local icon = GBB.Tool.IconClass[class] .. " "
+    return false, icon .. msg, author, ...
+  end
+
+  ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ClassColorFilter)
+  ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", ClassColorFilter)
+end
+
+function GBB.CreateChannelPulldown(frame, level, menuList)
   if level ~= 1 then return end
-  local t = GBB.PhraseChannelList( GetChannelList() )
+  local t = GBB.PhraseChannelList(GetChannelList())
 
   local info = UIDropDownMenu_CreateInfo()
 
+  for i, channel in pairs(t) do
+    local displayName = channel.name
+    if displayName == "LookingForGroup" then
+      displayName = "LFG"
+    elseif displayName == "Guild Channel" then
+      displayName = "Guild"
+    elseif displayName == "GuildRecruitment" then
+      displayName = "GR"
+    elseif displayName == "LocalDefense" then
+      displayName = "LD"
+    end
 
-  for i, channel in pairs( t ) do
-    info.text = i .. ". " .. channel.name
+    info.text = i .. ". " .. displayName
     info.checked = (channel.name == GBB.DB.AnnounceChannel)
     info.disabled = channel.hidden
     info.arg1 = i
     info.arg2 = channel.name
-    info.func = function( self, arg1, arg2, checked )
+    info.func = function(self, arg1, arg2, checked)
       GBB.DB.AnnounceChannel = arg2
-      GroupBulletinBoardFrameSelectChannel:SetText( arg2 )
+      local short = arg2
+      if short == "LookingForGroup" then
+        short = "LFG"
+      elseif short == "Guild Channel" then
+        short = "Guild"
+      elseif short == "GuildRecruitment" then
+        short = "GR"
+      elseif short == "LocalDefense" then
+        short = "LD"
+      end
+      GroupBulletinBoardFrameSelectChannel:SetText(short)
     end
-    UIDropDownMenu_AddButton( info )
+    UIDropDownMenu_AddButton(info)
   end
 end

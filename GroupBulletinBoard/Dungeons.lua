@@ -1,4 +1,7 @@
 local _, GBB = GroupBulletinBoard_Loader.Main()
+if not GBB then
+  GBB = GroupBulletinBoard_Addon or {}
+end
 
 local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
 
@@ -693,12 +696,20 @@ GBB.DebugNames = {
   "DEBUG", "BAD", "NIL",
 }
 
-GBB.Raids = {
+GBB.Raids                = {
   "ONY", "MC", "BWL", "ZG", "AQ20", "AQ40", "NAX",
-  "KARA", "GRUULS", "MAGS", "SSC", "EYE", "ZA", "HYJAL", "BT", "SWP", 
+  "KARA", "GRUULS", "MAGS", "SSC", "EYE", "ZA", "HYJAL", "BT", "SWP",
   "VOA", "NAXX", "EOE", "OS", "ULDR", "TOGC", "ICC", "RS",
   "ARENA", "WSG", "AV", "AB", "EOTS", "WG", "SOTA", "IOC",
   "BREW", "HOLLOW",
+}
+
+GBB.HeroicRaidList       = {
+  ["ULDR"] = true,
+  ["OS"] = true,
+  ["RS"] = true,
+  ["TOGC"] = true,
+  ["ICC"] = true,
 }
 
 GBB.Seasonal = {
@@ -716,12 +727,6 @@ function GBB.GetRaids()
   end
   return arr
 end
-
--- Needed because Lua sucks, Blizzard switch to Python please <- LMFAO
--- Takes in a list of dungeon lists, it will then concatenate the lists into a single list
--- it will put the dungeons in an order and give them a value incremental value that can be used for sorting later
--- ie one list "Foo" which contains "Bar" and "FooBar" and a second list "BarFoo" which contains "BarBar"
--- the output would be single list with "Bar" = 1, "FooBar" = 2, "BarFoo" = 3, "BarBar" = 4
 local function ConcatenateLists( Names )
   local result = {}
   local index = 1

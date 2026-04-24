@@ -14,64 +14,48 @@
 			<Offset><AbsDimension x="300" y="0"/></Offset>
 		</Anchors>
 		
-		<Backdrop name="$parentBackdrop" tile="true" frameStrata="PARENT">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="64"/>
-			</TileSize>
-			<BackgroundInsets>
-				<AbsInset left="5" right="5" top="5" bottom="5"/>
-			</BackgroundInsets>
-		</Backdrop>	
-		
-		<Layers>
-			<Layer level="BACKGROUND">
-        <Texture>                           
-          <Color a=".7" r="0" g="0" b="0" />
-        </Texture>                          
-			
-				<FontString name="$parentTitle" inherits="GameFontNormal" text="Group Bulletin Board" maxLines="1" justifyH="LEFT" justifyV="TOP">
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset>
-								<AbsDimension x="10" y="-10"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
+<Layers>
+    <Layer level="BACKGROUND">
+        <Texture>
+            <Color a=".7" r="0" g="0" b="0" />
+        </Texture>
+    </Layer>
 
-				<FontString name="$parentTitleEdition" inherits="GameFontNormal" text="fondlez Edition" maxLines="1" justifyH="LEFT" justifyV="TOP">
-					<Anchors>
-						<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentTitle">
-							<Offset>
-								<AbsDimension x="4" y="0"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-          <Color r="0.7" g="0.7" b="0.7" a="0.4"/>
-				</FontString>
+    <Layer level="ARTWORK">
+        <!-- Иконка слева от заголовка -->
+        <Texture name="$parentIcon" file="Interface\Icons\spell_holy_prayerofshadowprotection">
+            <Size><AbsDimension x="18" y="18"/></Size>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset><AbsDimension x="10" y="-10"/></Offset>
+                </Anchor>
+            </Anchors>
+        </Texture>
 
-				<FontString name="$parentStatusText" inherits="GameFontNormalSmall" text="status - when you can read this, try /reload" maxLines="1" justifyH="LEFT" justifyV="BOTTOM">
-					<Color r="0.5" g="0.5" b="1.0"/>
-					<Anchors>
-						<Anchor point="BOTTOMLEFT">
-							<Offset>
-								<AbsDimension x="10" y="10"/>
-							</Offset>
-						</Anchor>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="-10" y="10"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					
-				</FontString>	
-				
-			</Layer>
-		</Layers>
+        <!-- Заголовок -->
+        <FontString name="$parentTitle" inherits="GameFontNormal" text="Group Bulletin Board" maxLines="1" justifyH="LEFT" justifyV="TOP">
+            <Anchors>
+                <Anchor point="TOPLEFT" relativeTo="$parentIcon" relativePoint="TOPRIGHT">
+                    <Offset><AbsDimension x="4" y="0"/></Offset>
+                </Anchor>
+            </Anchors>
+        </FontString>
+    </Layer>
+
+    <Layer level="BACKGROUND">
+        <FontString name="$parentStatusText" inherits="GameFontNormalSmall" text="status - when you can read this, try /reload" maxLines="1" justifyH="LEFT" justifyV="BOTTOM">
+            <Color r="0.5" g="0.5" b="1.0"/>
+            <Anchors>
+                <Anchor point="BOTTOMLEFT">
+                    <Offset><AbsDimension x="10" y="10"/></Offset>
+                </Anchor>
+                <Anchor point="BOTTOMRIGHT">
+                    <Offset><AbsDimension x="-10" y="10"/></Offset>
+                </Anchor>
+            </Anchors>
+        </FontString>
+    </Layer>
+</Layers>
 
 		<Frames>			
 			<!-- default gui elements -->
@@ -115,15 +99,15 @@
 			</Button>
 
 			<!-- announcebox -->
-			<Button name="$parentSelectChannel" inherits="UIPanelButtonTemplate" text="channel">
+		<Button name="$parentSelectChannel" inherits="UIPanelButtonTemplate" text="channel">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent" >
 						<Offset>
-							<AbsDimension x="10" y="22"/>
+							<AbsDimension x="10" y="30"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Size><AbsDimension x="150" y="20" /></Size>
+				<Size><AbsDimension x="80" y="20" /></Size>
 				<Scripts>
 					<OnClick>
 						GroupBulletinBoard_Addon.BtnSelectChannel()
@@ -133,14 +117,9 @@
 			
 			<EditBox name="$parentAnnounceMsg" letters="255" autoFocus="false" inherits="InputBoxTemplate">
 				<Anchors>
-					<!--<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentSelectChannel" >-->
-						<!--<Offset>-->
-							<!--<AbsDimension x="8" y="0"/>-->
-						<!--</Offset>-->
-					<!--</Anchor>-->
-					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parent" >
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentSelectChannel" >
 						<Offset>
-							<AbsDimension x="16" y="22"/>
+							<AbsDimension x="8" y="0"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -166,7 +145,7 @@
 						</Offset>
 					</Anchor>
 				</Anchors>
-				<Size><AbsDimension x="100" y="20" /></Size>
+				<Size><AbsDimension x="40" y="20" /></Size>
 				<Scripts>
 					<OnClick>
 						GroupBulletinBoard_Addon.Announce()
@@ -184,7 +163,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension x="10" y="-30"/>
+							<AbsDimension x="0" y="-30"/>
 						</Offset>						
 					</Anchor>				
 				</Anchors>
@@ -261,20 +240,20 @@
 			</OnMouseDown>
 		</Scripts>
 	</Frame>
-	<Frame hidden="false" name="GroupBulletinBoard_TmpRequest" virtual="true">
-	
+
+	<Button hidden="false" name="GroupBulletinBoard_TmpRequest" virtual="true" enableMouse="true" motionScriptsWhileDisabled="true">
 		<Layers>
 			<Layer level="ARTWORK">				
-				<FontString name="$parent_name" text="samplename" inherits="GameFontNormal" maxLines="1" justifyH="LEFT" justifyV="TOP">
+				<FontString name="$parent_name" inherits="GameFontNormal" maxLines="1" justifyH="LEFT" justifyV="TOP">
 					<Size>
 						<AbsDimension x="100" y=""/>
 					</Size>
 					<color b="1" g="1" r="1" a="1"/>
 				</FontString>
-				<FontString name="$parent_message" text="samplemsg" inherits="GameFontNormal" maxLines="1" justifyH="LEFT" justifyV="TOP">
+				<FontString name="$parent_message" inherits="GameFontNormal" justifyH="LEFT" justifyV="TOP">
 					<color b="1" g="1" r="1" a="1"/>
 				</FontString>
-				<FontString name="$parent_time" text="samplename" inherits="GameFontNormal" maxLines="1" justifyH="RIGHT" justifyV="TOP">
+				<FontString name="$parent_time" inherits="GameFontNormal" maxLines="1" justifyH="RIGHT" justifyV="TOP">
 					<Size>
 						<AbsDimension x="75" y=""/>
 					</Size>
@@ -293,7 +272,6 @@
 				GroupBulletinBoard_Addon.RequestHideTooltip(self)
 			</OnLeave>					
 		</Scripts>
-		
-	</Frame>	
+	</Button>
 	
 </Ui>
