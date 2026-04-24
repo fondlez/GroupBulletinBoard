@@ -36,7 +36,7 @@ local function requestSort_TOP_nTOTAL( a, b )
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
     if a.last > b.last then
       return true
-    elseif (a.start == b.start and a.name > b.name) then
+    elseif (a.last == b.last and a.name > b.name) then
       return true
     end
   end
@@ -64,7 +64,7 @@ local function requestSort_nTOP_nTOTAL( a, b )
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
     if a.last < b.last then
       return true
-    elseif (a.start == b.start and a.name > b.name) then
+    elseif (a.last == b.last and a.name > b.name) then
       return true
     end
   end
