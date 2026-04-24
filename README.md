@@ -21,8 +21,8 @@ To open the settings, use slash command: **`/gbb`** or click the minimap icon.
 ## Graphical Interface
 
 ### Main Window
-![Main Window screenshot](
-)
+![Main Window screenshot]![Uploading image.png…]()
+
 
 ### Interface Settings
 ![Interface Settings screenshot](![Uploading image.png…]()
