@@ -4,10 +4,7 @@
 
 This is a port to WotLK (3.3.5a) of a TBC backport of a Classic TBC addon!
 
-* WotLK (3.3.5a) port: [fondlez](https://github.com/fondlez)
-* TBC 2.4.3 backport: [Obszczymucha aka. Ohhaimark](https://codeberg.org/obszczymucha/group-bulletin-board-tbc)
-* Classic TBC addon: [Vyscî-Whitemane](https://github.com/Vysci/LFG-Bulletin-Board)
-* Original addon: https://legacy.curseforge.com/wow/addons/group-bulletin-board
+* Fork - WotLK (3.3.5a) port: [fondlez](https://github.com/fondlez)
 
 ## Description
 GroupBulletinBoard (GBB) provides an overview of the endless requests in the 
@@ -24,10 +21,12 @@ To open the settings, use slash command: **`/gbb`** or click the minimap icon.
 ## Graphical Interface
 
 ### Main Window
-![Main Window screenshot](doc/img/addon-gbb-1.2.0-main.jpg)
+![Main Window screenshot](
+)
 
 ### Interface Settings
-![Interface Settings screenshot](doc/img/addon-gbb-1.2.0-settings.jpg)
+![Interface Settings screenshot](![Uploading image.png…]()
+)
 
 ## Slash Commands
 
