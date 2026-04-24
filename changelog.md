@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.0] - 2026-04-25
 ## Fixed
 - Display of class color and class icon
+- Don't Truncate - works correctly
+- Item tooltip - works correctly
+- Post message - works correctly
+- Filter on recomemmended level ranges - works correctly
 ### Added
 - Implemented new request parsing priority: WotLK > TBC > Classic, Raid > Dungeons, Raid/Dungeons > Trade > Misc
 - Added parsing of requests from /emote and /yell
 - Added template sending: {Class} {Spec} {GS} {Achievement}
+- Settings for font and font size (special for ElvUI users with scale 0.5)
+- And more some small things
 ## [1.2.2] - 2026-02-10
 ### Changed
 - improved tags for WotLK content: Obsidian Sanctum
