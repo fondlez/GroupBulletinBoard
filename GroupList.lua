@@ -1,5 +1,6 @@
 local _, GBB = GroupBulletinBoard_Loader.Main()
 
+local GetServerTime = GBB.api.GetServerTime
 local IsInRaid = GBB.api.IsInRaid
 local RAID_CLASS_COLORS_HEX = GBB.api.RAID_CLASS_COLORS_HEX
 

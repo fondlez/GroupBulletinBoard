@@ -1,8 +1,10 @@
 local _, GBB = GroupBulletinBoard_Loader.Main()
 
 local tconcat = table.concat
-local wipe = GBB.api.wipe
+
+local GetServerTime = GBB.api.GetServerTime
 local RAID_CLASS_COLORS_HEX = GBB.api.RAID_CLASS_COLORS_HEX
+local wipe = GBB.api.wipe
 
 local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
 

@@ -1,5 +1,6 @@
 local TOCNAME, GBB = GroupBulletinBoard_Loader.Main()
 
+local GetServerTime = GBB.api.GetServerTime
 local print = GBB.api.print
 local RAID_CLASS_COLORS_HEX = GBB.api.RAID_CLASS_COLORS_HEX
 

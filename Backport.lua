@@ -121,6 +121,35 @@ api.wipe = table.wipe or function( tab )
   return tab
 end
 
+do -- GetServerTime() - Credit: ElvUI 6.09
+  local GetGameTime = _G.GetGameTime
+  
+  local function getTimeDiffSeconds( srvHours, srvMinutes, seconds )
+    local timeUTC = date( "!*t" )
+    local timeLocal = date( "*t" )
+
+    local tzDiffHours = (timeLocal.hour - timeUTC.hour)
+    local tzDiffMinutes = (timeLocal.min - timeUTC.min)
+    local tzDiffTotalSeconds = tzDiffHours * 3600 + tzDiffMinutes * 60
+
+    local srvOffsetHours = srvHours - timeUTC.hour
+    local srvOffsetMinutes = srvMinutes - timeUTC.min
+    local srvOffsetSeconds = seconds and (timeUTC.sec - seconds) or 0
+
+    local srvDiffSecondsUTC = (srvOffsetHours * 3600) 
+      + (srvOffsetMinutes * 60) - srvOffsetSeconds
+
+    return srvDiffSecondsUTC - tzDiffTotalSeconds
+  end
+
+  local srvHours, srvMinutes = GetGameTime()
+  local srvDiffSeconds = getTimeDiffSeconds( srvHours, srvMinutes )
+
+  api.GetServerTime = _G.GetServerTime or function()
+    return time() + srvDiffSeconds
+  end
+end
+
 local chat_frame = _G.DEFAULT_CHAT_FRAME
 
 api.print = function( arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20 )
