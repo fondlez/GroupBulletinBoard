@@ -12,65 +12,57 @@ local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
 -------------------------------------------------------------------------------------
 local LastDungeon
 local lastIsFolded
-local requestNil = { dungeon = "NIL", start = 0, last = 0, name = "" }
+--local requestNil = { dungeon = "NIL", start = 0, last = 0, name = "" }
 
--- Add sort stability by adding a stable index for comparator functions
-local UNIQUE_WORD_BASIS = 1/10000
-local uniqueWordCounter = 0
-local uniqueWords = {}
-local function getUniqIndex(word)
-  if not uniqueWords[word] then
-    uniqueWordCounter = uniqueWordCounter + 1
-    uniqueWords[word] = uniqueWordCounter * UNIQUE_WORD_BASIS
+-- Add sort stability by adding a stable index for comparator function arguments
+local DISCRIMINATOR_BASIS = 1/10000
+local discriminator = 0
+local discriminators = {}
+local function getDiscriminator(word)
+  if not discriminators[word] then
+    discriminator = discriminator + 1
+    discriminators[word] = discriminator * DISCRIMINATOR_BASIS
   end
-  return uniqueWords[word]
+  return discriminators[word]
 end
 
 local function requestSort_TOP_TOTAL( a, b )
-  --a=a or requestNil
-  --b=b or requestNil
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.start + getUniqIndex(a.name) > b.start + getUniqIndex(b.name) then
+    if a.start + getDiscriminator(a.name) > b.start + getDiscriminator(b.name) then
       return true
     end
   end
   return false
 end
 local function requestSort_TOP_nTOTAL( a, b )
-  --a=a or requestNil
-  --b=b or requestNil
   if not b then return false end
 
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.last + getUniqIndex(a.name) > b.last + getUniqIndex(b.name) then
+    if a.last + getDiscriminator(a.name) > b.last + getDiscriminator(b.name) then
       return true
     end
   end
   return false
 end
 local function requestSort_nTOP_TOTAL( a, b )
-  --a=a or requestNil
-  --b=b or requestNil
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.start + getUniqIndex(a.name) < b.start + getUniqIndex(b.name) then
+    if a.start + getDiscriminator(a.name) < b.start + getDiscriminator(b.name) then
       return true
     end
   end
   return false
 end
 local function requestSort_nTOP_nTOTAL( a, b )
-  --a=a or requestNil
-  --b=b or requestNil
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.last + getUniqIndex(a.name) < b.last + getUniqIndex(b.name) then
+    if a.last + getDiscriminator(a.name) < b.last + getDiscriminator(b.name) then
       return true
     end
   end
