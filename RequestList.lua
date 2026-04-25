@@ -14,15 +14,25 @@ local LastDungeon
 local lastIsFolded
 local requestNil = { dungeon = "NIL", start = 0, last = 0, name = "" }
 
+-- Add sort stability by adding a stable index for comparator functions
+local UNIQUE_WORD_BASIS = 1/10000
+local uniqueWordCounter = 0
+local uniqueWords = {}
+local function getUniqIndex(word)
+  if not uniqueWords[word] then
+    uniqueWordCounter = uniqueWordCounter + 1
+    uniqueWords[word] = uniqueWordCounter * UNIQUE_WORD_BASIS
+  end
+  return uniqueWords[word]
+end
+
 local function requestSort_TOP_TOTAL( a, b )
   --a=a or requestNil
   --b=b or requestNil
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.start > b.start then
-      return true
-    elseif (a.start == b.start and a.name > b.name) then
+    if a.start + getUniqIndex(a.name) > b.start + getUniqIndex(b.name) then
       return true
     end
   end
@@ -36,9 +46,7 @@ local function requestSort_TOP_nTOTAL( a, b )
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.last > b.last then
-      return true
-    elseif (a.last == b.last and a.name > b.name) then
+    if a.last + getUniqIndex(a.name) > b.last + getUniqIndex(b.name) then
       return true
     end
   end
@@ -50,9 +58,7 @@ local function requestSort_nTOP_TOTAL( a, b )
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.start < b.start then
-      return true
-    elseif (a.start == b.start and a.name > b.name) then
+    if a.start + getUniqIndex(a.name) < b.start + getUniqIndex(b.name) then
       return true
     end
   end
@@ -64,9 +70,7 @@ local function requestSort_nTOP_nTOTAL( a, b )
   if GBB.dungeonSort[ a.dungeon ] < GBB.dungeonSort[ b.dungeon ] then
     return true
   elseif GBB.dungeonSort[ a.dungeon ] == GBB.dungeonSort[ b.dungeon ] then
-    if a.last < b.last then
-      return true
-    elseif (a.last == b.last and a.name > b.name) then
+    if a.last + getUniqIndex(a.name) < b.last + getUniqIndex(b.name) then
       return true
     end
   end
