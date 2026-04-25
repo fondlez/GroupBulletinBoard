@@ -466,7 +466,7 @@ function GBB.OptionsInit()
   end
   -- About
   local function SlashText( txt )
-    GBB.Options.AddText( txt , -1, nil, true)
+    GBB.Options.AddText( txt , -20, nil, true)
   end
 
   local about_panel = GBB.Options.AddPanel( GBB.L[ "PanelAbout" ] )
@@ -484,8 +484,7 @@ function GBB.OptionsInit()
 
   GBB.Options.AddCategory( GBB.L[ "HeaderSlashCommand" ] )
   GBB.Options.Indent( 10 )
-  --GBB.Options.AddText( GBB.L[ "AboutSlashCommand" ], -20 )
-  GBB.Options.AddText( GBB.L[ "AboutSlashCommand" ], -1, nil, true)
+  GBB.Options.AddText( GBB.L[ "AboutSlashCommand" ], -20, nil, true)
   GBB.Tool.PrintSlashCommand( nil, nil, SlashText )
   GBB.Options.Indent( -10 )
 
