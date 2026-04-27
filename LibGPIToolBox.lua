@@ -754,7 +754,7 @@ local function DoSlash( deep, msg, subSlash )
     local ok = (type( subcmd[ 1 ] ) == "table") and tContains( subcmd[ 1 ], msg[ deep ] ) or
         (subcmd[ 1 ] == msg[ deep ] or (subcmd[ 1 ] == "" and msg[ deep ] == nil))
     if subcmd[ 1 ] == "%" then
-      local para = Tool.iMerge( { unpack( subcmd, 4 ) }, { unpack( msg, deep ) } )
+      local para = Tool.iMerge( { unpack( subcmd, 4 ) }, unpack( msg, deep ) )
       return subcmd[ 3 ]( unpack( para ) )
     end
     if ok then
