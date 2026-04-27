@@ -18,6 +18,7 @@ local lastIsFolded
 local DISCRIMINATOR_BASIS = 1/10000
 local discriminator = 0
 local discriminators = {}
+
 local function getDiscriminator(word)
   if not discriminators[word] then
     discriminator = discriminator + 1
@@ -308,11 +309,13 @@ local function IgnoreRequest( name )
   for ir, req in pairs( GBB.RequestList ) do
     if type( req ) == "table" and req.name == name then
       req.last = 0
+      GBB.DB.IgnoreList[name] = true
+      GBB.ClearNeeded = true
+      break
     end
   end
-  GBB.ClearNeeded = true
-  --C_FriendList.AddIgnore( name )
 end
+GBB.IgnoreRequest = IgnoreRequest
 
 function GBB.Clear()
   if GBB.ClearNeeded or GBB.ClearTimer < time() then
@@ -646,6 +649,8 @@ function GBB.ParseMessage( msg, name, channel )
   if GBB.Initalized == false or name == nil or name == "" or msg == nil or msg == "" or string.len( msg ) < 4 then
     return
   end
+  
+  if GBB.DB.IgnoreList[name] then return end
 
   if GBB.DB.FilterNonAsciiMessages and is_non_ascii( msg ) then return end
 

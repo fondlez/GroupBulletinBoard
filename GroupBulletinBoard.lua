@@ -462,6 +462,7 @@ function GBB.Init()
   if not GBB.DB.CustomLocalesDungeon then GBB.DB.CustomLocalesDungeon = {} end
   if not GBB.DB.FontSize then GBB.DB.FontSize = "GameFontNormal" end
   if not GBB.DB.DisplayLFG then GBB.DB.DisplayLFG = false end
+  if not GBB.DB.IgnoreList then GBB.DB.IgnoreList = {} end
   GBB.DB.Server = nil -- old settings
 
   if GBB.DB.OnDebug == nil then GBB.DB.OnDebug = false end
