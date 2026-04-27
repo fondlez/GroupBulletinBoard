@@ -514,7 +514,7 @@ function GBB.Init()
     GroupBulletinBoardFrame:SetWidth( w )
     GroupBulletinBoardFrame:SetHeight( h )
   end
-
+  
   -- slash command
   local function doDBSet( DB, var, value )
     if value == nil then
@@ -529,6 +529,43 @@ function GBB.Init()
   end
 
   GBB.Tool.SlashCommand( { "/gbb", "/groupbulletinboard" }, {
+    { "ignore", "", {
+      { "list", "Print the Ignore List", function()
+          if next(GBB.DB.IgnoreList) == nil then
+            print("The Ignore List is empty.")
+            return
+          end
+          
+          print("Ignore List (character names):")
+          for k, v in pairs(GBB.DB.IgnoreList) do
+            print(format("  %s", k))
+          end
+        end
+      },
+      { "add", "", {
+        { "%", "Add character to the Ignore List", function(name)
+            GBB.IgnoreRequest(name)
+          end },
+        },
+      },
+      { "del", "", {
+        { "%", "Remove character from the Ignore List", function(name)
+            if not name or strtrim(name) == "" then
+              print(format("Invalid name: '%s'", name or "nil"))
+              return
+            end
+            
+            if GBB.DB.IgnoreList[name] then
+              print(format("Removing this character from the ignore list: '%s'", name))
+              GBB.DB.IgnoreList[name] = nil
+            else
+              print("No such character name is in the ignore list.")
+            end
+          end },
+        },
+      },
+    },
+    },
     { "notify", "", {
       { "chat", "", {
         { "%", GBB.L[ "CboxNotifyChat" ], doDBSet, GBB.DB, "NotifyChat" }
