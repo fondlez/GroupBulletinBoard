@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.3] - 2026-04-27
+
+### Added
+- added support for a functioning Ignore feature via a permanent Ignore List
+- added slash commands for the Ignore List. Use `/gbb ignore del` to unignore
+
+### Changed
+- improved the sort stability of the request list, so lines should not jump 
+around under certain sortings, except when new requests occur
+- improved tags for Ulduar requests
+
+### Fixed
+- help text in the About section of the GUI should appear more clearly
+
 ## [1.2.2] - 2026-02-10
 
 ### Changed
