@@ -988,13 +988,11 @@ local function createMenu(DungeonID, req)
     GBB.PopupDynamic:AddItem(string.format(GBB.L["BtnWhisper"], req.name), false, WhisperRequest, req.name)
     GBB.PopupDynamic:AddItem(string.format(GBB.L["BtnInvite"], req.name), false, InviteRequest, req.name)
     GBB.PopupDynamic:AddItem(string.format(GBB.L["BtnIgnore"], req.name), false, IgnoreRequest, req.name)
-    GBB.PopupDynamic:AddItem("", true)
   end
   if DungeonID then
     GBB.PopupDynamic:AddItem(GBB.L["BtnFold"], false, GBB.FoldedDungeons, DungeonID)
     GBB.PopupDynamic:AddItem(GBB.L["BtnFoldAll"], false, GBB.FoldAllDungeon)
     GBB.PopupDynamic:AddItem(GBB.L["BtnUnFoldAll"], false, GBB.UnfoldAllDungeon)
-    GBB.PopupDynamic:AddItem("", true)
   end
 
   local function refreshList()
@@ -1004,13 +1002,11 @@ local function createMenu(DungeonID, req)
   GBB.PopupDynamic:AddItem(GBB.L["CboxShowTotalTime"], false, GBB.DB, "ShowTotalTime", nil, refreshList)
   GBB.PopupDynamic:AddItem(GBB.L["CboxOrderNewTop"], false, GBB.DB, "OrderNewTop", nil, refreshList)
   GBB.PopupDynamic:AddItem(GBB.L["CboxEnableShowOnly"], false, GBB.DB, "EnableShowOnly", nil, refreshList)
-  GBB.PopupDynamic:AddItem(GBB.L["CboxCxhatStyle"], false, GBB.DB, "ChatStyle", nil, refreshList)
+  GBB.PopupDynamic:AddItem(GBB.L["CboxChatStyle"], false, GBB.DB, "ChatStyle", nil, refreshList)
   GBB.PopupDynamic:AddItem(GBB.L["CboxCompactStyle"], false, GBB.DB, "CompactStyle", nil, refreshList)
-  GBB.PopupDynamic:AddItem(GBB.L["CboxDontTruncate"], false, GBB.DB, "Donttruncate", nil, refreshList)
-  GBB.PopupDynamic:AddItem("", true)
+  GBB.PopupDynamic:AddItem(GBB.L["CboxDonttruncate"], false, GBB.DB, "Donttruncate", nil, refreshList)
   GBB.PopupDynamic:AddItem(GBB.L["CboxNotifySound"], false, GBB.DB, "NotifySound", nil, refreshList)
   GBB.PopupDynamic:AddItem(GBB.L["CboxNotifyChat"], false, GBB.DB, "NotifyChat", nil, refreshList)
-  GBB.PopupDynamic:AddItem("", true)
   GBB.PopupDynamic:AddItem(GBB.L["HeaderSettings"], false, GBB.Options.Open, 1)
 
   if has_wotlk then
