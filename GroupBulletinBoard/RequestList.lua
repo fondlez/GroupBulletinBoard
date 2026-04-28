@@ -42,6 +42,11 @@ end
 local LastDungeon
 local lastIsFolded
 
+-- Forward declarations so the click handler installed in CreateItem (defined
+-- earlier in the file than these helpers) can reach them via upvalues.
+local GBB_MeasureFS
+local FindLinkAtCursor
+
 local function GetDynamicClassIcon(classFile, size, yoffset)
   local staticIcon = GBB.Tool.IconClass[classFile]
   if not staticIcon then return "" end
@@ -238,24 +243,25 @@ local function CreateItem(yy, i, doCompact, req, forceHight)
     end
 
     GBB.FramesEntries[i]:SetScript("OnMouseDown", function(self, button)
-      if button == "LeftButton" and not IsShiftKeyDown() and not IsControlKeyDown() and not IsAltKeyDown() then
+      -- A click on a hyperlink (item, achievement, profession, etc.) must
+      -- behave like a standard chat link click, regardless of modifier keys.
+      -- GBB's shift/ctrl/alt shortcuts only apply to clicks on plain text.
+      if button == "LeftButton" then
         local msg = _G[self:GetName() .. "_message"]
         if msg then
-          local text = msg:GetText()
-          if text then
-            local x, y = GetCursorPosition()
-            local scale = self:GetEffectiveScale()
-            local left = msg:GetLeft()
-            local top = msg:GetTop()
-            local width = msg:GetWidth()
-            local height = msg:GetHeight()
-            if left and top and x and y then
-              local cx, cy = x / scale, y / scale
-              if cx >= left and cx <= left + width and cy <= top and cy >= top - height then
-                for link in text:gmatch("|H[^|]+|h%[.-%]|h") do
-                  SetItemRef(link, "", "LeftButton")
-                  return
-                end
+          local x, y = GetCursorPosition()
+          local scale = self:GetEffectiveScale()
+          local left = msg:GetLeft()
+          local top = msg:GetTop()
+          local width = msg:GetWidth()
+          local height = msg:GetHeight()
+          if x and y and scale and scale > 0 and left and top and width and height then
+            local cx, cy = x / scale, y / scale
+            if cx >= left and cx <= left + width and cy <= top and cy >= top - height and FindLinkAtCursor then
+              local link = FindLinkAtCursor(msg, cx)
+              if link then
+                SetItemRef(link, link, "LeftButton")
+                return
               end
             end
           end
@@ -1078,8 +1084,7 @@ function GBB.ClickRequest(self, button)
   end
 end
 
-local GBB_MeasureFS = nil
-local function FindLinkAtCursor(message, cursorX)
+FindLinkAtCursor = function(message, cursorX)
   local text = message:GetText()
   if not text then return nil end
   local left = message:GetLeft()
@@ -1090,11 +1095,10 @@ local function FindLinkAtCursor(message, cursorX)
     table.insert(links, link)
   end
   if #links == 0 then return nil end
-  if #links == 1 then return links[1] end
 
   local relX = cursorX - left
   local font, size = message:GetFont()
-  if not font then return links[1] end
+  if not font then return nil end
 
   if not GBB_MeasureFS then
     GBB_MeasureFS = UIParent:CreateFontString(nil, "ARTWORK")
@@ -1110,24 +1114,26 @@ local function FindLinkAtCursor(message, cursorX)
   end
 
   local stripped = stripCodes(text)
-  local result = links[1]
   local pos = 1
 
-  for i, link in ipairs(links) do
+  for _, link in ipairs(links) do
     local display = link:match("|h%[(.-)%]|h") or ""
     local linkPos = stripped:find(display, pos, true)
-    if linkPos and linkPos > 1 then
+    if linkPos then
       GBB_MeasureFS:SetText(stripped:sub(1, linkPos - 1))
-      if GBB_MeasureFS:GetStringWidth() >= relX then
-        break
+      local startX = GBB_MeasureFS:GetStringWidth()
+      GBB_MeasureFS:SetText(stripped:sub(1, linkPos - 1 + #display))
+      local endX = GBB_MeasureFS:GetStringWidth()
+      if relX >= startX and relX <= endX then
+        GBB_MeasureFS:SetText("")
+        return link
       end
+      pos = linkPos + #display
     end
-    result = links[i]
-    if linkPos then pos = linkPos + #display end
   end
 
   GBB_MeasureFS:SetText("")
-  return result
+  return nil
 end
 
 local function ShowMessageTooltip(self, req)
