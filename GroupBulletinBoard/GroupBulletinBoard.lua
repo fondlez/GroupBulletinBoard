@@ -820,6 +820,7 @@ function GBB.OnUpdate(elapsed)
 
     if GBB.updatePending and GBB.nextUpdateTime <= GetTime() then
       GBB.updatePending = false
+      GBB.firstScheduledTime = nil
       GBB.DoUpdateList()
     end
 
@@ -832,9 +833,15 @@ function GBB.OnUpdate(elapsed)
 end
 
 function GBB.ScheduleUpdate()
+  local now = GetTime()
   if not GBB.updatePending then
-    GBB.nextUpdateTime = GetTime() + 0.3
-    GBB.updatePending = true
+    GBB.firstScheduledTime = now
+  end
+  GBB.updatePending = true
+  if GBB.firstScheduledTime and (now - GBB.firstScheduledTime) >= 3 then
+    GBB.nextUpdateTime = now
+  else
+    GBB.nextUpdateTime = now + 0.5
   end
 end
 
