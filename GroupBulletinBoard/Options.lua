@@ -194,7 +194,7 @@ function GBB.OptionsInit()
   GBB.Options.AddText(GBB.L["msgFontFace"], -20)
   local LSM = LibStub("LibSharedMedia-3.0")
   local fonts = LSM:List("font")
-  GBB.Options.AddDrop(GBB.DB, "fontFace", GBB.DB.fontFace, fonts)
+  GBB.Options.AddDropScroll(GBB.DB, "fontFace", GBB.DB.fontFace, fonts)
 
   -- Font size slider
   GBB.Options.AddText(GBB.L["msgFontSize"], -20)

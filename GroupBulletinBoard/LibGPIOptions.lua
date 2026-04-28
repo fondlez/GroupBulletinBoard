@@ -505,6 +505,181 @@ function Options.AddDrop( DB, Var, Init, MenuItems )
   end )
 end
 
+-- Same as Options.AddDrop but opens a scrollable popup list instead of the
+-- standard UIDropDownMenu. Useful when MenuItems can be long (e.g. fonts).
+function Options.AddDropScroll( DB, Var, Init, MenuItems, visibleRows )
+  visibleRows = visibleRows or 12
+  local rowHeight = 16
+
+  local c = Options.Frames.count + 1
+  Options.Frames.count = c
+  local ButtonName = Options.Prefix .. "BUTTON_" .. c
+  Options.Vars[ ButtonName ] = Var
+  Options.Vars[ ButtonName .. "_init" ] = Init
+  Options.Vars[ ButtonName .. "_db" ] = DB
+
+  if DB ~= nil and Var ~= nil then
+    if DB[ Var ] == nil then DB[ Var ] = Init end
+  end
+
+  local frame = CreateFrame( "Frame", ButtonName, Options.CurrentPanel, "UIDropDownMenuTemplate" )
+  Options.Btn[ ButtonName ] = frame
+  if Options.inLine ~= true or Options.LineRelativ == nil then
+    frame:SetPoint( "TOPLEFT", Options.NextRelativ, "BOTTOMLEFT", Options.NextRelativX,
+      Options.NextRelativY )
+    Options.NextRelativ = ButtonName
+    Options.LineRelativ = ButtonName
+    Options.NextRelativX = 0
+    Options.NextRelativY = 0
+  else
+    frame:SetPoint( "TOP", Options.LineRelativ, "TOP", 0, 0 )
+    frame:SetPoint( "LEFT", Options.LineRelativ .. "Text", "RIGHT", 0, 0 )
+    Options.LineRelativ = ButtonName
+  end
+
+  local dropdown_width = 0
+  local dd_title = frame:CreateFontString( nil, 'OVERLAY', 'GameFontNormal' )
+  for _, item in pairs( MenuItems ) do
+    dd_title:SetText( item )
+    local text_width = dd_title:GetStringWidth() + 20
+    if text_width > dropdown_width then
+      dropdown_width = text_width
+    end
+  end
+  dd_title:Hide()
+
+  if GBB.api.client.version > GBB.api.client.TBC then
+    UIDropDownMenu_SetWidth( frame, dropdown_width )
+    UIDropDownMenu_SetText( frame, DB[ Var ] )
+  else
+    UIDropDownMenu_SetWidth( dropdown_width, frame )
+    UIDropDownMenu_SetText( DB[ Var ], frame )
+  end
+
+  -- Build the scrollable popup as a child of UIParent so it draws above
+  -- the InterfaceOptionsFrame regardless of strata.
+  local listWidth = dropdown_width + 40
+  local listHeight = visibleRows * rowHeight + 16
+
+  local list = CreateFrame( "Frame", ButtonName .. "_ScrollList", UIParent )
+  list:SetFrameStrata( "FULLSCREEN_DIALOG" )
+  list:SetSize( listWidth, listHeight )
+  list:SetPoint( "TOPLEFT", frame, "BOTTOMLEFT", 16, 4 )
+  list:Hide()
+  list:EnableMouse( true )
+  list:EnableMouseWheel( true )
+
+  if list.SetBackdrop then
+    list:SetBackdrop( {
+      bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+      tile = true, tileSize = 16, edgeSize = 16,
+      insets = { left = 4, right = 4, top = 4, bottom = 4 },
+    } )
+  end
+
+  local scroll = CreateFrame( "ScrollFrame", ButtonName .. "_Scroll", list, "FauxScrollFrameTemplate" )
+  scroll:SetPoint( "TOPLEFT", 8, -8 )
+  scroll:SetPoint( "BOTTOMRIGHT", -28, 8 )
+
+  local rows = {}
+  for i = 1, visibleRows do
+    local row = CreateFrame( "Button", nil, list )
+    row:SetHeight( rowHeight )
+    row:SetPoint( "LEFT", list, "LEFT", 8, 0 )
+    row:SetPoint( "RIGHT", list, "RIGHT", -28, 0 )
+    if i == 1 then
+      row:SetPoint( "TOP", list, "TOP", 0, -8 )
+    else
+      row:SetPoint( "TOP", rows[ i - 1 ], "BOTTOM", 0, 0 )
+    end
+    row:RegisterForClicks( "LeftButtonUp" )
+    row:SetHighlightTexture( "Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD" )
+
+    local text = row:CreateFontString( nil, "OVERLAY", "GameFontHighlightSmall" )
+    text:SetPoint( "LEFT", row, "LEFT", 4, 0 )
+    text:SetPoint( "RIGHT", row, "RIGHT", -4, 0 )
+    text:SetJustifyH( "LEFT" )
+    row.text = text
+    rows[ i ] = row
+  end
+
+  local function updateList()
+    local n = #MenuItems
+    FauxScrollFrame_Update( scroll, n, visibleRows, rowHeight )
+    local offset = FauxScrollFrame_GetOffset( scroll ) or 0
+    for i = 1, visibleRows do
+      local idx = i + offset
+      local row = rows[ i ]
+      if idx <= n then
+        row.value = MenuItems[ idx ]
+        row.text:SetText( MenuItems[ idx ] )
+        if MenuItems[ idx ] == DB[ Var ] then
+          row.text:SetTextColor( 1, 0.82, 0 )
+        else
+          row.text:SetTextColor( 1, 1, 1 )
+        end
+        row:Show()
+      else
+        row:Hide()
+      end
+    end
+  end
+
+  for i = 1, visibleRows do
+    rows[ i ]:SetScript( "OnClick", function( self )
+      local v = self.value
+      if v then
+        DB[ Var ] = v
+        Init = v
+        if GBB.api.client.version > GBB.api.client.TBC then
+          UIDropDownMenu_SetText( frame, v )
+        else
+          UIDropDownMenu_SetText( v, frame )
+        end
+      end
+      list:Hide()
+    end )
+  end
+
+  scroll:SetScript( "OnVerticalScroll", function( self, offset )
+    FauxScrollFrame_OnVerticalScroll( self, offset, rowHeight, updateList )
+  end )
+  list:SetScript( "OnShow", updateList )
+  list:SetScript( "OnMouseWheel", function( self, delta )
+    local current = scroll:GetVerticalScroll() or 0
+    local newValue = current - delta * rowHeight * 3
+    if newValue < 0 then newValue = 0 end
+    local maxValue = math.max( 0, ( #MenuItems - visibleRows ) * rowHeight )
+    if newValue > maxValue then newValue = maxValue end
+    scroll:SetVerticalScroll( newValue )
+    updateList()
+  end )
+
+  -- Toggle handler shared by the arrow button and the text field.
+  local function toggle()
+    if list:IsShown() then
+      list:Hide()
+    else
+      CloseDropDownMenus()
+      list:Show()
+    end
+  end
+
+  local arrowBtn = _G[ ButtonName .. "Button" ]
+  if arrowBtn then
+    arrowBtn:SetScript( "OnClick", toggle )
+  end
+
+  frame:EnableMouse( true )
+  frame:SetScript( "OnMouseDown", function( self, button )
+    if button == "LeftButton" then toggle() end
+  end )
+
+  -- Hide popup when the dropdown itself is hidden (e.g. options panel closed).
+  frame:HookScript( "OnHide", function() list:Hide() end )
+end
+
 function Options.EditCheckBox( toEdit, DB, Var, Init, Text, width )
   local ButtonName = toEdit:GetName()
 
