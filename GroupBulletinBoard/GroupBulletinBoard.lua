@@ -687,9 +687,6 @@ function GBB.Init()
   GBB.nextUpdateTime = 0
   GBB.updatePending = false
   GBB.pendingScrollRestore = nil
-  GBB.yellEmoteBatch = {}
-  GBB.yellEmoteBatchTime = nil
-
   GBB.PopupDynamic = GBB.Tool.CreatePopup(GBB.OptionsUpdate)
 
   GroupBulletinBoardFrame_GroupFrame:Hide()
@@ -729,21 +726,13 @@ end
 local function Event_CHAT_MSG_YELL(msg, name, ...)
   if not GBB.Initalized then return end
   local guid = select(12, ...)
-  if not GBB.yellEmoteBatch then GBB.yellEmoteBatch = {} end
-  table.insert(GBB.yellEmoteBatch, { msg = msg, name = name, guid = guid, channel = "YELL" })
-  if not GBB.yellEmoteBatchTime then
-    GBB.yellEmoteBatchTime = GetTime() + 3
-  end
+  GBB.ParseMessage(msg, name, guid, "YELL")
 end
 
 local function Event_CHAT_MSG_EMOTE(msg, name, ...)
   if not GBB.Initalized then return end
   local guid = select(12, ...)
-  if not GBB.yellEmoteBatch then GBB.yellEmoteBatch = {} end
-  table.insert(GBB.yellEmoteBatch, { msg = msg, name = name, guid = guid, channel = "EMOTE" })
-  if not GBB.yellEmoteBatchTime then
-    GBB.yellEmoteBatchTime = GetTime() + 3
-  end
+  GBB.ParseMessage(msg, name, guid, "EMOTE")
 end
 
 function GBB.OnShow()
@@ -806,16 +795,6 @@ function GBB.OnUpdate(elapsed)
     if GBB.LFG_Timer < time() and GBB.LFG_Successfulljoined == false then
       GBB.JoinLFG()
       GBB.LFG_Timer = time() + GBB.LFG_UPDATETIME
-    end
-
-    if GBB.yellEmoteBatchTime and GetTime() >= GBB.yellEmoteBatchTime then
-      GBB.yellEmoteBatchTime = nil
-      if GBB.yellEmoteBatch then
-        for _, entry in ipairs(GBB.yellEmoteBatch) do
-          GBB.ParseMessage(entry.msg, entry.name, entry.guid, entry.channel)
-        end
-        GBB.yellEmoteBatch = {}
-      end
     end
 
     if GBB.updatePending and GBB.nextUpdateTime <= GetTime() then

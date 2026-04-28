@@ -166,23 +166,10 @@ function GBB.Announce()
   end
 end
 
+-- Class icons/colors are intentionally NOT injected into the regular chat
+-- frames for /yell or /emote. They should only appear inside the GBB request
+-- list. Kept as a no-op stub for backward compatibility with any caller.
 function GBB.HookChatColors()
-  if not ChatFrame_AddMessageEventFilter then return end
-
-  local function ClassColorFilter(chatFrame, event, msg, author, ...)
-    if not GBB.DB or not GBB.DB.ColorByClass then return false end
-    if not author or author == "" then return false end
-    local name = author:match("^([^%-]+)") or author
-    local class = GBB.RealClass and (GBB.RealClass[name] or GBB.RealClass[author])
-    if not class then return false end
-    if not GBB.DB.ShowClassIcon then return false end
-    if not GBB.Tool or not GBB.Tool.IconClass or not GBB.Tool.IconClass[class] then return false end
-    local icon = GBB.Tool.IconClass[class] .. " "
-    return false, icon .. msg, author, ...
-  end
-
-  ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", ClassColorFilter)
-  ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", ClassColorFilter)
 end
 
 function GBB.CreateChannelPulldown(frame, level, menuList)
