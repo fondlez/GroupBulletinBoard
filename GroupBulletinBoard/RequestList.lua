@@ -878,6 +878,23 @@ function GBB.ParseMessage(msg, name, guid, channel)
 
   local finalDungeonList = { [bestDungeon] = true }
 
+  if channel == "YELL" or channel == "EMOTE" then
+    local throttle = GBB.SPAM_THROTTLE_SECONDS or 30
+    for _, req in ipairs(GBB.RequestList) do
+      if type(req) == "table" then
+        local sameSender = (guid and guid ~= "" and req.guid == guid)
+            or (req.fullName and req.fullName == fullName)
+            or (req.name and req.name == name)
+        if sameSender then
+          if (req.last or 0) + throttle > requestTime then
+            return
+          end
+          break
+        end
+      end
+    end
+  end
+
   for i = #GBB.RequestList, 1, -1 do
     local req = GBB.RequestList[i]
     if type(req) == "table" then

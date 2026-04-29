@@ -73,6 +73,12 @@ GBB.TBCDUNGEONBREAK = 57
 GBB.DUNGEONBREAK = 25
 GBB.COMBINEMSGTIMER = 10
 GBB.MAXCOMPACTWIDTH = 350
+-- Minimum interval (seconds) between updates of an existing entry coming
+-- from /yell or /emote for the same sender. Server-side rate limits already
+-- throttle /lfg and /trade (~60s) but /yell and /emote are not limited, so
+-- spammers would otherwise constantly rotate the request list. New senders
+-- still appear instantly; only re-updates of an existing entry are delayed.
+GBB.SPAM_THROTTLE_SECONDS = 30
 
 function GBB.GetGearScore()
   if GearScore_GetScore then
