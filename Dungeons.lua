@@ -1,6 +1,7 @@
 local _, GBB = GroupBulletinBoard_Loader.Main()
 
 local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
+local has_mop = (GBB.api.client.version >= GBB.api.client.MOP)
 
 local function getSeasonalDungeons()
   local events = {}
@@ -118,6 +119,32 @@ function GBB.GetDungeonNames()
 		DefaultEnGB["WG"]  = "Wintergrasp (PvP)"
 		DefaultEnGB["SOTA"] = "Stand of the Ancients (PvP)"
     DefaultEnGB["IOC"] = "Isle of Conquest (PvP)"
+  end
+
+  if has_mop then
+    DefaultEnGB["TJS"] = "Temple of the Jade Serpent"
+    DefaultEnGB["SSB"] = "Stormstout Brewery"
+    DefaultEnGB["SPM"] = "Shado-Pan Monastery"
+    DefaultEnGB["MSP"] = "Mogu'shan Palace"
+    DefaultEnGB["GSS"] = "Gate of the Setting Sun"
+    DefaultEnGB["SNT"] = "Siege of Niuzao Temple"
+    DefaultEnGB["SHALLS"] = "Scarlet Halls"
+    DefaultEnGB["MSV"] = "Mogu'shan Vaults"
+    DefaultEnGB["HOF"] = "Heart of Fear"
+    DefaultEnGB["TOES"] = "Terrace of Endless Spring"
+    DefaultEnGB["TOT"] = "Throne of Thunder"
+    DefaultEnGB["SOO"] = "Siege of Orgrimmar"
+    DefaultEnGB["SHA"] = "Sha of Anger"
+    DefaultEnGB["GALLEON"] = "Galleon"
+    DefaultEnGB["NALAK"] = "Nalak"
+    DefaultEnGB["OOND"] = "Oondasta"
+    DefaultEnGB["ORDOS"] = "Ordos"
+    DefaultEnGB["CELESTIALS"] = "The Four Celestials"
+    DefaultEnGB["BFG"] = "Battle for Gilneas (PvP)"
+    DefaultEnGB["TP"] = "Twin Peaks (PvP)"
+    DefaultEnGB["SSM"] = "Silvershard Mines (PvP)"
+    DefaultEnGB["TOK"] = "Temple of Kotmogu (PvP)"
+    DefaultEnGB["DWG"] = "Deepwind Gorge (PvP)"
   end
 
   local dungeonNamesLocales = {
@@ -700,6 +727,51 @@ GBB.Raids = {
   "ARENA", "WSG", "AV", "AB", "EOTS", "WG", "SOTA", "IOC",
   "BREW", "HOLLOW",
 }
+
+if has_wotlk and has_mop then
+  GBB.WotlkDungeonLevels["TJS"] = { 85, 90 }
+  GBB.WotlkDungeonLevels["SSB"] = { 85, 90 }
+  GBB.WotlkDungeonLevels["SPM"] = { 87, 90 }
+  GBB.WotlkDungeonLevels["MSP"] = { 87, 90 }
+  GBB.WotlkDungeonLevels["GSS"] = { 89, 90 }
+  GBB.WotlkDungeonLevels["SNT"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["SHALLS"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["MSV"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["HOF"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["TOES"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["TOT"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["SOO"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["SHA"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["GALLEON"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["NALAK"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["OOND"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["ORDOS"] = { 90, 90 }
+  GBB.WotlkDungeonLevels["CELESTIALS"] = { 90, 90 }
+
+  for _, k in ipairs({
+    "TJS", "SSB", "SPM", "MSP", "GSS", "SNT", "SHALLS",
+    "MSV", "HOF", "TOES", "TOT", "SOO",
+    "SHA", "GALLEON", "NALAK", "OOND", "ORDOS", "CELESTIALS",
+  }) do
+    table.insert(GBB.WotlkDungeonNames, k)
+  end
+
+  for _, k in ipairs({
+    "MSV", "HOF", "TOES", "TOT", "SOO",
+    "SHA", "GALLEON", "NALAK", "OOND", "ORDOS", "CELESTIALS",
+  }) do
+    table.insert(GBB.Raids, k)
+  end
+
+  GBB.PvpLevels["BFG"] = { 85, 90 }
+  GBB.PvpLevels["TP"] = { 85, 90 }
+  GBB.PvpLevels["SSM"] = { 90, 90 }
+  GBB.PvpLevels["TOK"] = { 90, 90 }
+  GBB.PvpLevels["DWG"] = { 90, 90 }
+  for _, k in ipairs({ "BFG", "TP", "SSM", "TOK", "DWG" }) do
+    table.insert(GBB.PvpNames, k)
+  end
+end
 
 GBB.Seasonal = {
   [ "BREW" ] = { startDate = "09/20", endDate = "10/06" },

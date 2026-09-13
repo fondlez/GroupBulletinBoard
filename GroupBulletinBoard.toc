@@ -1,4 +1,4 @@
-## Interface: 30300
+## Interface: 50400
 ## Title: Group Bulletin Board
 ## Notes: A bulletin board for LFG/LFM messages.
 ## Version: 1.2.3

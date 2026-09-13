@@ -1,6 +1,7 @@
 local _, GBB = GroupBulletinBoard_Loader.Main()
 
 local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
+local has_mop = (GBB.api.client.version >= GBB.api.client.MOP)
 
 -- IMPORTANT, everything must be in low-case and with no space!
 
@@ -434,6 +435,37 @@ if has_wotlk then
   })
   
   for k, v in pairs(wotlkTags) do
+    GBB.dungeonTagsLoc.enGB[k] = v
+  end
+end
+
+if has_mop then
+  local mopTags = langSplit({
+    ["TJS"] = "tjs jade serpent temple",
+    ["SSB"] = "ssb stormstout brewery",
+    ["SPM"] = "spm shado pan monastery",
+    ["MSP"] = "msp mogushan mogu shan palace",
+    ["GSS"] = "gss gate setting sun",
+    ["SNT"] = "snt niuzao siege niuzao temple",
+    ["SHALLS"] = "shalls scarlet halls",
+    ["MSV"] = "msv mogushan mogu shan vaults",
+    ["HOF"] = "hof heart fear",
+    ["TOES"] = "toes tes terrace endless spring",
+    ["TOT"] = "tot throne thunder",
+    ["SOO"] = "soo siege orgrimmar",
+    ["SHA"] = "sha anger",
+    ["GALLEON"] = "galleon",
+    ["NALAK"] = "nalak",
+    ["OOND"] = "oondasta oond",
+    ["ORDOS"] = "ordos",
+    ["CELESTIALS"] = "celestials celestial four",
+    ["BFG"] = "bfg gilneas",
+    ["TP"] = "tp twin peaks",
+    ["SSM"] = "ssm silvershard mines",
+    ["TOK"] = "tok kotmogu",
+    ["DWG"] = "dwg deepwind gorge",
+  })
+  for k, v in pairs(mopTags) do
     GBB.dungeonTagsLoc.enGB[k] = v
   end
 end
