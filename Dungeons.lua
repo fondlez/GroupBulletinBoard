@@ -729,32 +729,32 @@ GBB.Raids = {
 }
 
 if has_wotlk and has_mop then
-  GBB.WotlkDungeonLevels["TJS"] = { 85, 90 }
-  GBB.WotlkDungeonLevels["SSB"] = { 85, 90 }
-  GBB.WotlkDungeonLevels["SPM"] = { 87, 90 }
-  GBB.WotlkDungeonLevels["MSP"] = { 87, 90 }
-  GBB.WotlkDungeonLevels["GSS"] = { 89, 90 }
-  GBB.WotlkDungeonLevels["SNT"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["SHALLS"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["MSV"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["HOF"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["TOES"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["TOT"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["SOO"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["SHA"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["GALLEON"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["NALAK"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["OOND"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["ORDOS"] = { 90, 90 }
-  GBB.WotlkDungeonLevels["CELESTIALS"] = { 90, 90 }
+  GBB.MopDungeonLevels = {
+    ["TJS"] = { 85, 90 },
+    ["SSB"] = { 85, 90 },
+    ["SPM"] = { 87, 90 },
+    ["MSP"] = { 87, 90 },
+    ["GSS"] = { 89, 90 },
+    ["SNT"] = { 90, 90 },
+    ["SHALLS"] = { 90, 90 },
+    ["MSV"] = { 90, 90 },
+    ["HOF"] = { 90, 90 },
+    ["TOES"] = { 90, 90 },
+    ["TOT"] = { 90, 90 },
+    ["SOO"] = { 90, 90 },
+    ["SHA"] = { 90, 90 },
+    ["GALLEON"] = { 90, 90 },
+    ["NALAK"] = { 90, 90 },
+    ["OOND"] = { 90, 90 },
+    ["ORDOS"] = { 90, 90 },
+    ["CELESTIALS"] = { 90, 90 },
+  }
 
-  for _, k in ipairs({
+  GBB.MopDungeonNames = {
     "TJS", "SSB", "SPM", "MSP", "GSS", "SNT", "SHALLS",
     "MSV", "HOF", "TOES", "TOT", "SOO",
     "SHA", "GALLEON", "NALAK", "OOND", "ORDOS", "CELESTIALS",
-  }) do
-    table.insert(GBB.WotlkDungeonNames, k)
-  end
+  }
 
   for _, k in ipairs({
     "MSV", "HOF", "TOES", "TOT", "SOO",
@@ -832,6 +832,9 @@ function GBB.GetDungeonSort()
   if has_wotlk then
     table.insert(dungeonOrder, GBB.WotlkDungeonNames)
   end
+  if has_mop then
+    table.insert(dungeonOrder, GBB.MopDungeonNames)
+  end
   table.insert(dungeonOrder, GBB.PvpNames)
   table.insert(dungeonOrder, GBB.Misc)
   table.insert(dungeonOrder, GBB.DebugNames)
@@ -847,6 +850,25 @@ function GBB.GetDungeonSort()
     tbcDungeonSize = tbcDungeonSize + 1
   end
 
+  local wotlkDungeonSize = 0
+  if has_wotlk then
+    for _, _ in pairs( GBB.WotlkDungeonNames ) do
+      wotlkDungeonSize = wotlkDungeonSize + 1
+    end
+  end
+
+  local mopDungeonSize = 0
+  if has_mop then
+    for _, _ in pairs( GBB.MopDungeonNames ) do
+      mopDungeonSize = mopDungeonSize + 1
+    end
+  end
+
+  local pvpSize = 0
+  for _, _ in pairs( GBB.PvpNames ) do
+    pvpSize = pvpSize + 1
+  end
+
   local debugSize = 0
   for _, _ in pairs( GBB.DebugNames ) do
     debugSize = debugSize + 1
@@ -859,9 +881,15 @@ function GBB.GetDungeonSort()
   GBB.MAXDUNGEON = vanillaDungeonSize
   
   if has_wotlk then
-    GBB.WOTLKMAXDUNGEON = GBB.NUM_DUNGEONS
     GBB.TBCMAXDUNGEON = vanillaDungeonSize + tbcDungeonSize
     GBB.WOTLKDUNGEONSTART = GBB.TBCMAXDUNGEON + 1
+    if has_mop then
+      GBB.WOTLKMAXDUNGEON = GBB.WOTLKDUNGEONSTART + wotlkDungeonSize - 1
+      GBB.MOPDUNGEONSTART = GBB.WOTLKMAXDUNGEON + 1
+      GBB.MOPMAXDUNGEON = GBB.MOPDUNGEONSTART + mopDungeonSize + pvpSize - 1
+    else
+      GBB.WOTLKMAXDUNGEON = GBB.NUM_DUNGEONS
+    end
   else
     GBB.TBCMAXDUNGEON = GBB.NUM_DUNGEONS
   end
@@ -888,8 +916,10 @@ end
 if has_wotlk then
   GBB.dungeonLevel = Union(
     Union(
-      Union(DetermineVanillaDungeonRange(), GBB.TbcDungeonLevels), 
-      GBB.WotlkDungeonLevels),
+      Union(
+        Union(DetermineVanillaDungeonRange(), GBB.TbcDungeonLevels),
+        GBB.WotlkDungeonLevels),
+      GBB.MopDungeonLevels or {}),
     GBB.PvpLevels)
 else
   GBB.dungeonLevel = Union(
