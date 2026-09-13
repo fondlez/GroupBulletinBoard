@@ -31,6 +31,7 @@ GBB.locales = {
     ["PanelFilter"] = "Vanilla Filter",
 		["TBCPanelFilter"]="TBC Filter",
 		["WotlkPanelFilter"]="WotLK Filter",
+		["MoPPanelFilter"]="MoP Filter",
     ["HeaderTags"] = "Search patterns",
     ["HeaderTagsCustom"] = "Custom search patterns",
     ["PanelTags"] = "Search patterns",

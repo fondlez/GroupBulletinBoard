@@ -1,10 +1,12 @@
 local TOCNAME, GBB = GroupBulletinBoard_Loader.Main()
 
 local has_wotlk = (GBB.api.content.expansion >= GBB.api.content.WOTLK)
+local has_mop = (GBB.api.client.version >= GBB.api.client.MOP)
 
 local ChannelIDs
 local ChkBox_FilterDungeon
 local TbcChkBox_FilterDungeon
+local MopChkBox_FilterDungeon
 --Options
 -------------------------------------------------------------------------------------
 
@@ -268,7 +270,7 @@ function GBB.OptionsInit()
     
     GBB.Options.InLine()
     GBB.Options.AddButton( GBB.L[ "BtnSelectAll" ], function()
-      DoSelectFilter( true, WotlkChkBox_FilterDungeon, GBB.WOTLKDUNGEONSTART, GBB.WOTLKMAXDUNGEON - 2 ) -- Doing -2 to not select trade and misc
+      DoSelectFilter( true, WotlkChkBox_FilterDungeon, GBB.WOTLKDUNGEONSTART, GBB.WOTLKMAXDUNGEON ) -- full WotLK range
     end )
     GBB.Options.AddButton( GBB.L[ "BtnUnselectAll" ], function()
       DoSelectFilter( false, WotlkChkBox_FilterDungeon, GBB.WOTLKDUNGEONSTART, GBB.WOTLKMAXDUNGEON )
@@ -307,6 +309,33 @@ function GBB.OptionsInit()
     end )
     GBB.Options.AddButton( GBB.L[ "BtnUnselectAll" ], function()
       DoSelectFilter( false, TbcChkBox_FilterDungeon, GBB.TBCDUNGEONSTART, GBB.TBCMAXDUNGEON )
+    end )
+    GBB.Options.EndInLine()
+  end
+
+  if has_mop then
+    -- Panel for MoP Dungeons
+    GBB.Options.AddPanel(GBB.L["MoPPanelFilter"])
+    GBB.Options.AddCategory(GBB.L["HeaderDungeon"])
+    GBB.Options.Indent(10)
+
+    MopChkBox_FilterDungeon = {}
+    for index = GBB.MOPDUNGEONSTART, GBB.MOPDUNGEONSTART + 15 do
+      MopChkBox_FilterDungeon[index] = CheckBoxFilter(GBB.dungeonSort[index], true)
+    end
+
+    GBB.Options.SetRightSide()
+    GBB.Options.Indent(10)
+    for index = GBB.MOPDUNGEONSTART + 16, GBB.MOPMAXDUNGEON do
+      MopChkBox_FilterDungeon[index] = CheckBoxFilter(GBB.dungeonSort[index], true)
+    end
+
+    GBB.Options.InLine()
+    GBB.Options.AddButton( GBB.L[ "BtnSelectAll" ], function()
+      DoSelectFilter( true, MopChkBox_FilterDungeon, GBB.MOPDUNGEONSTART, GBB.MOPMAXDUNGEON )
+    end )
+    GBB.Options.AddButton( GBB.L[ "BtnUnselectAll" ], function()
+      DoSelectFilter( false, MopChkBox_FilterDungeon, GBB.MOPDUNGEONSTART, GBB.MOPMAXDUNGEON )
     end )
     GBB.Options.EndInLine()
   end
